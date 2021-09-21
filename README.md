@@ -13,3 +13,7 @@ Python Packages:
 - sendgrid
 
 Also make sure that your terminal supports colors or it will look extremelly bad.
+
+# Working with code
+I strongly recommend using BeterComments extension for VsCode, idk if it exists for other editors too.
+Also as MIT license says, you can resell it, edit it anything you want. Just leave information that we created it, or at least the base. Thanks :)
