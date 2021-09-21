@@ -21,7 +21,7 @@ I'm too lazy to write down every command here so just in short
 Clone repo
 download python3.9
 execute python3.9 -m pip install -r ext/requirements.txt
-import table in ext folder named discord.sql
+import table in ext/discord.sql to your gulag db
 implement patch located at ext/verificationpatch.md, how to do it? It's explained in this file.
 copy ext/config.sample.py to base folder and rename it to config.py
 run bot with python3.9 main.py
