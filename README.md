@@ -10,7 +10,7 @@ Python Packages:
 - cmyui
 - tzdata (If running on windows)
 - discord
-- sendgrid (If you're going to use this module, you'll also need sendgrid api key, you can get it [here](https://sendgrid.com)
+- sendgrid (If you're going to use this module, you'll also need sendgrid api key, you can get it [here](https://sendgrid.com). If you dont plan using our mailing module, disable it in config.
 
 Also make sure that your terminal supports colors or it will look extremelly bad.
 
