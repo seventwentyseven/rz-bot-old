@@ -10,6 +10,10 @@ Python Packages:
 - cmyui
 - tzdata (If running on windows)
 - discord
-- sendgrid
+- sendgrid (If you're going to use this module, you'll also need sendgrid api key, you can get it [here](https://sendgrid.com). If you dont plan using our mailing module, disable it in config.
 
 Also make sure that your terminal supports colors or it will look extremelly bad.
+
+# Working with code
+I strongly recommend using BeterComments extension for VS Code, idk if it exists for other editors too.
+Also as MIT license says, you can resell it, edit it anything you want. Just leave information that we created it, or at least the base. Be a nice person. Thanks :)
