@@ -5,7 +5,7 @@ You can see our trello board here: https://trello.com/b/sZORcdeI/rz-bot
 
 # Requirements
 Bot has been tested on both windows and Ubuntu 18.04 so it can run along with gulag.
-I'm too lazy to make requirements.txt right now so here are things that you need:
+So here are things that you need:
 
 - tzdata python package (If running on windows)
 - sendgrid (If you're going to use this module, you'll also need sendgrid api key, you can get it [here](https://sendgrid.com). If you dont plan using our mailing module, disable it in config.
