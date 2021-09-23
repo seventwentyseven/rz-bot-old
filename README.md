@@ -1,10 +1,10 @@
 # What is rz bot
-RZ bot or with original name thats unwrittable in repo name "Ż bot", is a bot for managing osu servers on gulag's engine. Right now there's not too much in the code because im rewriting it for 727th time. I want it to be usable on every osu server made on gulag.
+RZ bot or with original name thats unwrittable in repo name "Ż bot", is a bot for managing osu servers on gulag. Right now there's not too much in the code because im rewriting it for 727th time. I want it to be usable on every osu server made on gulag.
 
 You can see our trello board here: https://trello.com/b/sZORcdeI/rz-bot
 
 # Requirements
-Bot has been tested on both windows and Ubuntu 18.04 so it can run along with gulag.
+Bot has been tested on both windows and Ubuntu 18.04.
 So here are things that you need:
 
 - tzdata python package (If running on windows)
