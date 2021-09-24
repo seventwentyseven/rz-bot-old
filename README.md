@@ -22,7 +22,16 @@ Clone repo
 download python3.9
 execute python3.9 -m pip install -r ext/requirements.txt
 import table in ext/discord.sql to your gulag db
-implement patch located at ext/verificationpatch.md, how to do it? It's explained in this file.
+implement patch located at ext/verificationpatch.md, how to do it? It's explained in that file.
 copy ext/config.sample.py to base folder and rename it to config.py
 run bot with python3.9 main.py
 ```
+Discord part
+```
+You need to create new server, name it whatever you want.
+Invite bot to it *CONFIGURE IT BEFORE* and add emojis located in images/emojis folder
+Now the saddedst part, you need to manually copy id of every emoji and paste it into const/emojis.py file on correct places. (emoji names)
+```
+
+# My code
+Yes, I do know that my code is shit and spaghetti, but don't worry! Every day I work on improving and this will be improved pretty quick, if you want to make something better feel free to open pr. :D

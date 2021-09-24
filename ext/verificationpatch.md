@@ -1,4 +1,5 @@
-# Put this into constants/commands.py under _help command in your gulag. You can see how we implemented it in our seventwentyseven/gulag repo.
+# How 2
+Put this into constants/commands.py after _help command in your gulag. You can see how we implemented it in our seventwentyseven/gulag repo.
 
 ```python
 @command(Privileges.Normal, hidden=True)

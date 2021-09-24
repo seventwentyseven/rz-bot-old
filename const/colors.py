@@ -1,11 +1,14 @@
 class colors:
     class embeds:
+        # These are just hex, as # is not working in python (crub your comments)
+        # You just swap this hash with "0x" so for example instead of
+        #  #FFFFFF for white you'll put here 0xFFFFFF
         red = 0xff3838
         green = 0x2ed573
         blue = 0x0984e3
         purple = 0x8e44ad
 
-    #terminal colors
+    # terminal colors, don't touch these. There's nothing you can change.
     end="\033[0m"       # Text Reset
 
     # Regular Colors
