@@ -3,3 +3,4 @@ tzdata
 sendgrid
 discord
 datetime
+pandas
