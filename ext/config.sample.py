@@ -94,6 +94,22 @@ roles = {
     "nicknameban": "id"
 }
 
+#Used in embeds, it's explained in readme
+emotes = {
+    "F": "<:rankf:853753898954391572>",
+    "D": "<:rankd:853753898682155009>",
+    "C": "<:rankc:853753898912448553>",
+    "B": "<:rankb:853753899089657866>",
+    "A": "<:ranka:853753899000004618>",
+    "S": "<:ranks:853753899135402044>",
+    "SH": "<:ranksh:853753899072094208>",
+    "X": "<:rankx:853753898817028147>",
+    "XH": "<:rankxh:853753899206311976>",
+    "jestemsmieje": "<:jestemsmieje:859364580169089054>",
+    "jajco": "<:jajco:859381426703826945>",
+    "smciota": "<:smciota:830041394419597362>"
+}
+
 ##############################
 #    TURN THINGS OFF / ON    #
 ##############################
@@ -169,3 +185,17 @@ footer_type = 0
 exec_cmd = True
 
 #NOTE: To change colors of embeds go to the const/colors.py file
+
+###################################
+#     COMMAND SPECIFIC OPTIONS    #
+###################################
+
+# Best command
+opt_best = {
+    # Minimum pp for -g argument in best command, 
+    # keep it above 15 to avoid lags with database
+    "min_g_value": 20
+}
+
+#Funi texts for people who hate catch like us
+no_catch = True
