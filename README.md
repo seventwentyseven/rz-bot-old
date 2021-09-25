@@ -7,6 +7,8 @@ You can see our trello board here: https://trello.com/b/sZORcdeI/rz-bot
 Bot has been tested on both windows and Ubuntu 18.04.
 So here are things that you need:
 
+- Ubuntu 18.04/20.04 or Windows 7+
+- SSL Cert installed on web, api and avatar domains
 - tzdata python package (If running on windows)
 - sendgrid (If you're going to use this module, you'll also need sendgrid api key, you can get it [here](https://sendgrid.com). If you dont plan using our mailing module, disable it in config.
 - Also make sure that your terminal supports colors or it will look extremelly bad. Example that supports it: Windows Terminal from Microsoft Store
@@ -27,7 +29,7 @@ copy ext/config.sample.py to base folder and rename it to config.py
 run bot with python3.9 main.py
 ```
 
-# Discord part
+### Discord part
 ```
 You need to create new server, name it whatever you want.
 Invite bot to it *CONFIGURE IT BEFORE* and add emojis located in images/emojis folder
