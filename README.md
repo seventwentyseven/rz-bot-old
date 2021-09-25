@@ -29,7 +29,7 @@ copy ext/config.sample.py to base folder and rename it to config.py
 run bot with python3.9 main.py
 ```
 
-# Discord part
+### Discord part
 ```
 You need to create new server, name it whatever you want.
 Invite bot to it *CONFIGURE IT BEFORE* and add emojis located in images/emojis folder
