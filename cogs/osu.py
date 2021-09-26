@@ -106,7 +106,7 @@ async def profile(ctx, *args):
             
             #* Database stuff
             user_discord = await glob.db.fetch(
-                f"SELECT osu_id, default_mode FROM discord WHERE `discord_id`='{user}'"
+                f"SELECT osu_id, default_mode, discord_id FROM discord WHERE `discord_id`='{user}'"
             )
             
             #! User not found, in this case not linked
@@ -161,7 +161,7 @@ async def profile(ctx, *args):
         
         #* Database stuff
         user_discord = await glob.db.fetch(
-            f"SELECT osu_id, default_mode FROM discord WHERE `discord_id`='{user}'"
+            f"SELECT osu_id, default_mode, discord_id FROM discord WHERE `discord_id`='{user}'"
         )
         #! User not found, in this case not linked
         if not user_discord:
