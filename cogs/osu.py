@@ -706,7 +706,7 @@ async def best(ctx, *args):
             desc_prefix = f"{user_osu['name']} has"
         embed = discord.Embed(
             title=f"", 
-            description=f"▸ {desc_prefix} **{g_amt}** scores over **{g}pp**", 
+            description=f"▸ {desc_prefix} **{g_amt}** plays worth over **{g} PP**", 
             color=ctx.author.color)
         embed.set_author(
             name=header_author, 
