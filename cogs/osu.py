@@ -370,7 +370,7 @@ async def profile(ctx, *args):
     embed_block_userinfo += f"▸ **Last Seen Date:** {last_seen_date}\n"
     embed_block_userinfo += f"▸ **User Groups:** {userpriv}"
     if user_discord:
-        embed_block_userinfo += f"\n\n**User Discord:** <@!{user_discord['discord_id']}>"
+        embed_block_userinfo += f"\n▸ **User Discord:** <@!{user_discord['discord_id']}>"
     #*Footer
     if user_api['action'] == None:
         additional_stuff = ""
