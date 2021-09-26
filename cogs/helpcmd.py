@@ -61,7 +61,7 @@ async def help(ctx, cmd_name:str = "None"):
         # Command (arg) not found
         embed = discord.Embed(
             title="Error",
-            description=f"Command not found, type `{prefix}help` to command list\nType `{prefix}help <command name>` to get list of commands",
+            description=f"Command not found, type `{prefix}help` to command list",
             color=colors.embeds.red,
         )
         embed.set_footer(text=glob.embed_footer)
@@ -72,7 +72,7 @@ async def help(ctx, cmd_name:str = "None"):
         if cmd_name in admin_commands and cmd['privileges'] not in priv:
             embed = discord.Embed(
                 title="Error",
-                description=f"Command not found, type `{prefix}help` to command list\nType `{prefix}help <command name>` to get list of commands",
+                description=f"You don't have privileges to get help for this command",
                 color=colors.embeds.red,
             )
             embed.set_footer(text=glob.embed_footer)
