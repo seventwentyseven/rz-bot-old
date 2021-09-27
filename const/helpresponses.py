@@ -30,8 +30,8 @@ helpresponses = {
         "example": f"`{p}link 21345`",
         "info": "Arguments:\n `<5-digit code>` - Code from the bot on osu server\n\n**How to get code?**\n"
             "**1.** Login to your osu account on our server\n"
-            "**2.** Click `F9` and, and search for `Ż Bot`, it's our bancho bot\n"
-            "**3.** Open chat with `Ż Bot` and type `!link <your discord tag>`, for example `!link def750#2137`\n"
+            f"**2.** Click `F9` and, and search for `{glob.config.bancho_bot_name}`, it's our bancho bot\n"
+            f"**3.** Open chat with `{glob.config.bancho_bot_name}` and type `!link <your discord tag>`, for example `!link def750#2137`\n"
             f"**4.** Bot will give you 5-digit code, return to discord and type `{p}link <code that you recieved>`\n"
             "After this you should be done, if you still have problem feel free to ask staff for help",
     },
