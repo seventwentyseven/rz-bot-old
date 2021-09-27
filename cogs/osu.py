@@ -585,16 +585,14 @@ async def best(ctx, *args):
         author_discord = await glob.db.fetch(
             f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'"
         )
-        if not author_discord:
-            pass
-        else:
+        if author_discord:
             author_oid = author_discord['osu_id']
             author_osu = await glob.db.fetch(f"SELECT id, name, priv FROM users WHERE `id`='{author_oid}'")
+            user_priv = Privileges(int(user_osu['priv']))
+            author_priv = Privileges(int(author_osu['priv']))
 
     #! Check if restricted, if yes check if allowed in config, in no check perms, 
     #! if yes check admin commands allowed in public, if no check channel
-    user_priv = Privileges(int(user_osu['priv']))
-    author_priv = Privileges(int(author_osu['priv']))
     if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
     # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
         if not author_priv & Privileges.Staff:
