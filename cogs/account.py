@@ -77,7 +77,7 @@ async def link(ctx, code=None):
         return log(f"Error occured while executing 'link' by '{ctx.author.name}#{ctx.author.discriminator}'\nMessage: {e}", Ansi.RED)
     
     #!Everything went fine, send embed
-    embed = discord.Embed(title="Account linked successfully", description=f"You linked your osu account on seventwentyseven.tk `{user_osu['name']}`, ID: `{userid}`, with this discord account (<@{ctx.author.id}>)", color=colors.embeds.green)
+    embed = discord.Embed(title="Account linked successfully", description=f"You linked your osu account on {glob.config.servername} `{user_osu['name']}`, ID: `{userid}`, with this discord account (<@{ctx.author.id}>)", color=colors.embeds.green)
     embed.set_footer(text=glob.embed_footer)
     await ctx.send(embed=embed)
     #!Add role
