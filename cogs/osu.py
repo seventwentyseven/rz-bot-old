@@ -366,11 +366,12 @@ async def profile(ctx, *args):
     #*Userinfo Block
     #TODO: Calculate timeago on registed date
     embed_block_userinfo = f"▸ **User ID:** {user_osu['id']}\n"
+    if user_discord:
+        embed_block_userinfo += f"\n▸ **User Discord:** <@!{user_discord['discord_id']}>\n"
     embed_block_userinfo += f"▸ **Registed Date:** {register_date}\n"
     embed_block_userinfo += f"▸ **Last Seen Date:** {last_seen_date}\n"
     embed_block_userinfo += f"▸ **User Groups:** {userpriv}"
-    if user_discord:
-        embed_block_userinfo += f"\n▸ **User Discord:** <@!{user_discord['discord_id']}>"
+
     #*Footer
     if user_api['action'] == None:
         additional_stuff = ""
@@ -1141,8 +1142,7 @@ async def rs(ctx, *args):
                           f"?id={userid}&scope=recent&mods={mode_mods}&mode={mode_gulag}&limit=1")
     json_object = json.loads(scores.text)
     scores = json_object['scores']
-    #? DEBUG
-    await ctx.send(f'```{scores}```')
+    
     fetched_score_count = len(scores)
     #! Error catching with score amount
     #* If no scores return error
