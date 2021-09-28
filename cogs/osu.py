@@ -200,33 +200,38 @@ async def profile(ctx, *args):
         author_discord = await glob.db.fetch(
             f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'"
         )
-        if not author_discord:
-            pass
-        else:
+        if author_discord:
             author_oid = author_discord['osu_id']
             author_osu = await glob.db.fetch(f"SELECT id, name, priv FROM users WHERE `id`='{author_oid}'")
-
-    #! Check if restricted, if yes check if allowed in config, in no check perms, 
-    #! if yes check admin commands allowed in public, if no check channel
-    user_priv = Privileges(int(user_osu['priv']))
-    author_priv = Privileges(int(author_osu['priv']))
-    if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
-    # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
-        if not author_priv & Privileges.Staff:
+        else:
             embed = discord.Embed(
                 title="Error", 
-                description=f"You don't have permissions to check profiles of restricted users.", 
+                description=f"You don't have permissions to check profiles of restricted users. (Your profile is not linked)", 
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
+        
+        user_priv = Privileges(int(user_osu['priv']))
+        author_priv = Privileges(int(author_osu['priv']))
+        #! Check if restricted, if yes check if allowed in config, in no check perms, 
+        #! if yes check admin commands allowed in public, if no check channel
+        if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
+        # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
+            if not author_priv & Privileges.Staff:
+                embed = discord.Embed(
+                    title="Error", 
+                    description=f"You don't have permissions to check profiles of restricted users.", 
+                    color=colors.embeds.red)
+                embed.set_footer(text=glob.embed_footer)
+                return await ctx.send(embed=embed)
 
-        if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
-            embed = discord.Embed(
-                title="Error", 
-                description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
-                color=colors.embeds.red)
-            embed.set_footer(text=glob.embed_footer)
-            return await ctx.send(embed=embed)
+            if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
+                embed = discord.Embed(
+                    title="Error", 
+                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
+                    color=colors.embeds.red)
+                embed.set_footer(text=glob.embed_footer)
+                return await ctx.send(embed=embed)
 
     # continue as normal here if they aren't restricted/they are allowed to view profile
     #! FINALLY CHECK MODE
@@ -1053,33 +1058,38 @@ async def rs(ctx, *args):
         author_discord = await glob.db.fetch(
             f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'"
         )
-        if not author_discord:
-            pass
-        else:
+        if author_discord:
             author_oid = author_discord['osu_id']
             author_osu = await glob.db.fetch(f"SELECT id, name, priv FROM users WHERE `id`='{author_oid}'")
-
-    #! Check if restricted, if yes check if allowed in config, in no check perms, 
-    #! if yes check admin commands allowed in public, if no check channel
-    user_priv = Privileges(int(user_osu['priv']))
-    author_priv = Privileges(int(author_osu['priv']))
-    if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
-    # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
-        if not author_priv & Privileges.Staff:
+        else:
             embed = discord.Embed(
                 title="Error", 
-                description=f"You don't have permissions to check profiles of restricted users.", 
+                description=f"You don't have permissions to check profiles of restricted users. (Your profile is not linked)", 
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
+        
+        user_priv = Privileges(int(user_osu['priv']))
+        author_priv = Privileges(int(author_osu['priv']))
+        #! Check if restricted, if yes check if allowed in config, in no check perms, 
+        #! if yes check admin commands allowed in public, if no check channel
+        if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
+        # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
+            if not author_priv & Privileges.Staff:
+                embed = discord.Embed(
+                    title="Error", 
+                    description=f"You don't have permissions to check profiles of restricted users.", 
+                    color=colors.embeds.red)
+                embed.set_footer(text=glob.embed_footer)
+                return await ctx.send(embed=embed)
 
-        if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
-            embed = discord.Embed(
-                title="Error", 
-                description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
-                color=colors.embeds.red)
-            embed.set_footer(text=glob.embed_footer)
-            return await ctx.send(embed=embed)
+            if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
+                embed = discord.Embed(
+                    title="Error", 
+                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
+                    color=colors.embeds.red)
+                embed.set_footer(text=glob.embed_footer)
+                return await ctx.send(embed=embed)
 
     # continue as normal here if they aren't restricted/they are allowed to view profile
     #! FINALLY CHECK MODE
