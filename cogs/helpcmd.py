@@ -44,13 +44,13 @@ async def help(ctx, cmd_name:str = "None"):
         embed = discord.Embed(
             title="Help - List of commands",
             description=f"Current prefix: `{prefix}`  List of commands:\n\n"
-                        "**Osu:** `profile`, `rs`, `best`, `getuserid`\n"
+                        "**Osu:** `profile`, `rs`, `best`, `getuserid`, `defaultmode`\n"
                         "**Verification:** `link`\n",
             color=colors.embeds.blue,
         )
         #Help admin section
         if Privileges.Mod in priv or Privileges.Dangerous in priv or Privileges.Admin in priv:
-            embed.description += "**Admin:** `rlc`, `load`"
+            embed.description += "**Admin:** `rlc`, `load`, `changecountry`"
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
     
