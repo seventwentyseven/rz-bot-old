@@ -56,5 +56,12 @@ helpresponses = {
         "example": f"`{p}getuserid <def750>`",
         "info": f"Arguments: \n`<user>` - Specify user ({glob.config.servername} name)"
     },
+    "defaultmode": {
+        "privileges": Privileges.Normal,
+        "header": "defaultmode",
+        "description": "Change your default mode on osu related commands",
+        "example": f"`{p}defaultmode mania`",
+        "info": f"Arguments: \n`<mode>` - Specify mode\nYou need to have your account linked, type `{p}help link` if you need help"
+    },
 
 }
