@@ -21,6 +21,7 @@ def setup(bot):
     bot.add_cog(account(bot))
     bot.add_command(link)
     bot.add_command(getuserid)
+    bot.add_command(defaultmode)
 
 
 #Re define for easier usage
@@ -105,3 +106,41 @@ async def getuserid(ctx, user=None):
     if not usr:
         return await ctx.send("User not found")
     await ctx.send(f"{user}'s id is {usr['id']}")
+   
+@commands.command()
+async def defaultmode(ctx, mode=None):
+    cmd_name = "defaultmode"
+    
+    #! Syntax check
+    if mode == None:
+        embed = discord.Embed(title="Error", description=f"You need to specify mode, type `{prefix}help {cmd_name}` if you need help.", color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    
+    try:
+        mode = const.modes[str(mode)]
+    except:
+        embed = discord.Embed(title="Error", description=f"You need to specify mode, type `{prefix}help {cmd_name}` if you need help.", color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+
+    #! Fetch user
+    res = await glob.db.fetch(f"SELECT discord_id, default_mode FROM discord WHERE discord_id={ctx.author.id}")
+    if not res:
+        embed = discord.Embed(
+            title="Error", 
+            description=f"You need to have your {glob.config.servername} account linked, type `{prefix}help {cmd_name}\nType `{prefix}help link` if you need help with linking.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    
+    #! Everything went fine
+    await glob.db.execute(f"UPDATE `discord` SET `default_mode` = '{mode}' WHERE `discord_id` = {ctx.author.id}")
+
+    embed = discord.Embed(
+        title="Default mode changed successfully",
+        description=f"Your default mode has been changed from osu!{const.mode_names[str(res['default_mode'])].capitalize()} to osu!{const.mode_names[mode]}",
+        color=colors.embeds.green
+    )
+    embed.set_footer(text=glob.embed_footer)
+    return await ctx.send(embed=embed)
