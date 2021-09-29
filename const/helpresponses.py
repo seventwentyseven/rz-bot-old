@@ -63,5 +63,11 @@ helpresponses = {
         "example": f"`{p}defaultmode mania`",
         "info": f"Arguments: \n`<mode>` - Specify mode\nYou need to have your account linked, type `{p}help link` if you need help"
     },
-
+    "changecountry": {
+        "privileges": Privileges.Admin,
+        "header": "Change Country",
+        "description": "Change user's country",
+        "example": f"`{p}changecountry PL def750`",
+        "info": f"Arguments: \n`<2-letter country code>` - Specify country, if you don't know country code. Google it.\n`<username>` - User's nickname on your server"
+    },
 }
