@@ -106,7 +106,7 @@ async def profile(ctx, *args):
             
             #* Database stuff
             user_discord = await glob.db.fetch(
-                f"SELECT osu_id, default_mode, discord_id FROM discord WHERE `discord_id`='{user}'"
+                "SELECT osu_id, default_mode, discord_id FROM discord WHERE discord_id = %s", user
             )
             
             #! User not found, in this case not linked
@@ -123,7 +123,7 @@ async def profile(ctx, *args):
                 "SELECT id, name, priv, country,"
                 "silence_end, creation_time,"
                 "latest_activity, clan_id, clan_priv "
-                f"FROM users WHERE `id`='{userid}'"
+                "FROM users WHERE id = %s", userid
             )
         else:
             # It was bancho name all along
@@ -134,7 +134,7 @@ async def profile(ctx, *args):
                 "SELECT id, name, priv, country,"
                 "silence_end, creation_time,"
                 "latest_activity, clan_id, clan_priv "
-                f"FROM users WHERE `name`='{user}'"
+                "FROM users WHERE name = %s", user
             )
             if not user_osu:
                 embed = discord.Embed(title="Error",
@@ -148,7 +148,7 @@ async def profile(ctx, *args):
                 return await ctx.send(embed=embed)
             user_oid = user_osu['id']
             user_discord = await glob.db.fetch(
-                f"SELECT discord_id, default_mode FROM discord WHERE `osu_id`='{user_oid}'"
+                "SELECT discord_id, default_mode FROM discord WHERE osu_id = %s", user_oid
             )
             if user_discord and str(user_discord['discord_id']) == str(ctx.author.id):
                 self_execute = True
@@ -161,7 +161,7 @@ async def profile(ctx, *args):
         
         #* Database stuff
         user_discord = await glob.db.fetch(
-            f"SELECT osu_id, default_mode, discord_id FROM discord WHERE `discord_id`='{user}'"
+            "SELECT osu_id, default_mode, discord_id FROM discord WHERE discord_id = %s", user
         )
         #! User not found, in this case not linked
         if not user_discord:
@@ -182,7 +182,7 @@ async def profile(ctx, *args):
             "SELECT id, name, priv, country,"
             "silence_end, creation_time,"
             "latest_activity, clan_id, clan_priv "
-            f"FROM users WHERE `id`='{userid}'"
+            "FROM users WHERE id = %s", userid
         )
 
     userid = user_osu['id']
@@ -198,11 +198,11 @@ async def profile(ctx, *args):
     #Also make sure to get author perms !Not checked if turned off in config
     if glob.config.restricted_users_view_by_all == False:
         author_discord = await glob.db.fetch(
-            f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'"
+            "SELECT osu_id FROM discord WHERE discord_id = %s", ctx.author.id
         )
         if author_discord:
             author_oid = author_discord['osu_id']
-            author_osu = await glob.db.fetch(f"SELECT id, name, priv FROM users WHERE `id`='{author_oid}'")
+            author_osu = await glob.db.fetch("SELECT id, name, priv FROM users WHERE id = %s", author_oid)
         else:
             embed = discord.Embed(
                 title="Error", 
@@ -314,14 +314,14 @@ async def profile(ctx, *args):
 
     #! Calculate rank
     #! This shit is stupid as fuck, fetching all users with pp>0 is not a good idea
-    lb = await glob.db.fetchall(f"SELECT stats.id FROM stats LEFT JOIN users ON stats.id = users.id WHERE stats.mode = {mode_gulag} && pp>0 && users.priv & 1 ORDER BY pp DESC")
+    lb = await glob.db.fetchall("SELECT stats.id FROM stats LEFT JOIN users ON stats.id = users.id WHERE stats.mode = %s && pp>0 && users.priv & 1 ORDER BY pp DESC", mode_gulag)
     try:
         rank_global = int(lb.index({'id': int(userid)}))+1
     except:
         rank_global = 0
     #Country Rank
     usercountry = user_osu['country']
-    lb_country = await glob.db.fetchall(f"SELECT stats.id FROM stats LEFT JOIN users ON stats.id = users.id WHERE stats.mode = {mode_gulag} && users.country = '{usercountry}' && pp>0 && users.priv & 1 ORDER BY pp DESC")
+    lb_country = await glob.db.fetchall("SELECT stats.id FROM stats LEFT JOIN users ON stats.id = users.id WHERE stats.mode = %s && users.country = %s && pp>0 && users.priv & 1 ORDER BY pp DESC", (mode_gulag, usercountry))
     try:
         rank_country = int(lb_country.index({'id': int(userid)}))+1
     except:
@@ -329,7 +329,7 @@ async def profile(ctx, *args):
     
 
     #!Get user stats
-    user_stats = await glob.db.fetch(f"SELECT * FROM stats WHERE `id`='{userid}' AND `mode`='{mode_gulag}'")
+    user_stats = await glob.db.fetch("SELECT * FROM stats WHERE id = %s AND mode = %s", (userid, mode_gulag))
     
     #* Calculate stuff needed for userinfo block
     
@@ -496,7 +496,7 @@ async def best(ctx, *args):
             
             #* Database stuff
             user_discord = await glob.db.fetch(
-                f"SELECT osu_id, default_mode FROM discord WHERE `discord_id`='{user}'"
+                "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s", user
             )
             
             #! User not found, in this case not linked
@@ -513,7 +513,7 @@ async def best(ctx, *args):
                 "SELECT id, name, priv, country,"
                 "silence_end, creation_time,"
                 "latest_activity, clan_id, clan_priv "
-                f"FROM users WHERE `id`='{userid}'"
+                "FROM users WHERE id = %s", userid
             )
         else:
             # It was bancho name all along
@@ -524,7 +524,7 @@ async def best(ctx, *args):
                 "SELECT id, name, priv, country,"
                 "silence_end, creation_time,"
                 "latest_activity, clan_id, clan_priv "
-                f"FROM users WHERE `name`='{user}'"
+                "FROM users WHERE name = %s", user
             )
             if not user_osu:
                 embed = discord.Embed(title="Error",
@@ -538,7 +538,7 @@ async def best(ctx, *args):
                 return await ctx.send(embed=embed)
             user_oid = user_osu['id']
             user_discord = await glob.db.fetch(
-                f"SELECT discord_id, default_mode FROM discord WHERE `osu_id`='{user_oid}'"
+                "SELECT discord_id, default_mode FROM discord WHERE osu_id = %s", user_oid
             )
             if user_discord and str(user_discord['discord_id']) == str(ctx.author.id):
                 self_execute = True
@@ -551,7 +551,7 @@ async def best(ctx, *args):
         
         #* Database stuff
         user_discord = await glob.db.fetch(
-            f"SELECT osu_id, default_mode FROM discord WHERE `discord_id`='{user}'"
+            "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s ", user
         )
         #! User not found, in this case not linked
         if not user_discord:
@@ -572,7 +572,7 @@ async def best(ctx, *args):
             "SELECT id, name, priv, country,"
             "silence_end, creation_time,"
             "latest_activity, clan_id, clan_priv "
-            f"FROM users WHERE `id`='{userid}'"
+            "FROM users WHERE id = %s", userid
         )
 
     userid = user_osu['id']
@@ -588,11 +588,11 @@ async def best(ctx, *args):
     #Also make sure to get author perms !Not checked if turned off in config
     if glob.config.restricted_users_view_by_all == False:
         author_discord = await glob.db.fetch(
-            f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'"
+            "SELECT osu_id FROM discord WHERE discord_id = %s", ctx.author.id
         )
         if author_discord:
             author_oid = author_discord['osu_id']
-            author_osu = await glob.db.fetch(f"SELECT id, name, priv FROM users WHERE `id`='{author_oid}'")
+            author_osu = await glob.db.fetch("SELECT id, name, priv FROM users WHERE id = %s", author_oid)
         else:
             embed = discord.Embed(
                 title="Error", 
@@ -703,10 +703,20 @@ async def best(ctx, *args):
         
         #SQL Stuff
         if glob.config.opt_best['g_fetch_failed'] == False:
-            failed = f" AND grade != 'F'"
+            if mode_mods == "vn":
+                res = await glob.db.fetchall("SELECT COUNT(id) as `amount` FROM scores_vn WHERE pp>%s AND userid=%s AND mode=%s AND grade != 'F'", (g, userid, mode))
+            if mode_mods == "rx":
+                res = await glob.db.fetchall("SELECT COUNT(id) as `amount` FROM scores_rx WHERE pp>%s AND userid=%s AND mode=%s AND grade != 'F'", (g, userid, mode))
+            if mode_mods == "ap":
+                res = await glob.db.fetchall("SELECT COUNT(id) as `amount` FROM scores_ap WHERE pp>%s AND userid=%s AND mode=%s AND grade != 'F'", (g, userid, mode))
         else:
-            failed = ""
-        res = await glob.db.fetchall(f"SELECT COUNT(id) as `amount` FROM scores_{mode_mods} WHERE pp>{g} AND userid={userid} AND mode={mode}{failed}")
+            if mode_mods == "vn":
+                res = await glob.db.fetchall("SELECT COUNT(id) as `amount` FROM scores_vn WHERE pp>%s AND userid=%s AND mode=%s", (g, userid, mode))
+            if mode_mods == "rx":
+                res = await glob.db.fetchall("SELECT COUNT(id) as `amount` FROM scores_rx WHERE pp>%s AND userid=%s AND mode=%s", (g, userid, mode))
+            if mode_mods == "ap":
+                res = await glob.db.fetchall("SELECT COUNT(id) as `amount` FROM scores_ap WHERE pp>%s AND userid=%s AND mode=%s", (g, userid, mode))
+
         g_amt = res[0]['amount']
 
         #!Build embed    
@@ -964,7 +974,7 @@ async def rs(ctx, *args):
             
             #* Database stuff
             user_discord = await glob.db.fetch(
-                f"SELECT osu_id, default_mode FROM discord WHERE `discord_id`='{user}'"
+                "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s", user
             )
             
             #! User not found, in this case not linked
@@ -981,7 +991,7 @@ async def rs(ctx, *args):
                 "SELECT id, name, priv, country,"
                 "silence_end, creation_time,"
                 "latest_activity, clan_id, clan_priv "
-                f"FROM users WHERE `id`='{userid}'"
+                "FROM users WHERE id = %s", userid
             )
         else:
             # It was bancho name all along
@@ -992,7 +1002,7 @@ async def rs(ctx, *args):
                 "SELECT id, name, priv, country,"
                 "silence_end, creation_time,"
                 "latest_activity, clan_id, clan_priv "
-                f"FROM users WHERE `name`='{user}'"
+                "FROM users WHERE name = %s", user
             )
             if not user_osu:
                 embed = discord.Embed(title="Error",
@@ -1006,7 +1016,7 @@ async def rs(ctx, *args):
                 return await ctx.send(embed=embed)
             user_oid = user_osu['id']
             user_discord = await glob.db.fetch(
-                f"SELECT discord_id, default_mode FROM discord WHERE `osu_id`='{user_oid}'"
+                "SELECT discord_id, default_mode FROM discord WHERE osu_id = %s", user_oid
             )
             if user_discord and str(user_discord['discord_id']) == str(ctx.author.id):
                 self_execute = True
@@ -1019,7 +1029,7 @@ async def rs(ctx, *args):
         
         #* Database stuff
         user_discord = await glob.db.fetch(
-            f"SELECT osu_id, default_mode FROM discord WHERE `discord_id`='{user}'"
+            "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s", user
         )
         #! User not found, in this case not linked
         if not user_discord:
@@ -1040,7 +1050,7 @@ async def rs(ctx, *args):
             "SELECT id, name, priv, country,"
             "silence_end, creation_time,"
             "latest_activity, clan_id, clan_priv "
-            f"FROM users WHERE `id`='{userid}'"
+            "FROM users WHERE id = %s", userid
         )
 
     userid = user_osu['id']
@@ -1056,11 +1066,11 @@ async def rs(ctx, *args):
     #Also make sure to get author perms !Not checked if turned off in config
     if glob.config.restricted_users_view_by_all == False:
         author_discord = await glob.db.fetch(
-            f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'"
+            "SELECT osu_id FROM discord WHERE discord_id = %s", ctx.author.id
         )
         if author_discord:
             author_oid = author_discord['osu_id']
-            author_osu = await glob.db.fetch(f"SELECT id, name, priv FROM users WHERE `id`='{author_oid}'")
+            author_osu = await glob.db.fetch("SELECT id, name, priv FROM users WHERE id = %s", author_oid)
         else:
             embed = discord.Embed(
                 title="Error", 

@@ -30,12 +30,12 @@ async def help(ctx, cmd_name:str = "None"):
     # If user is trying to get help for admin command
     priv = 1
     if cmd_name.lower() in admin_commands or cmd_name == "None":
-        authordisocrd = await glob.db.fetch(f"SELECT osu_id FROM discord WHERE `discord_id`='{ctx.author.id}'")
+        authordisocrd = await glob.db.fetch("SELECT osu_id FROM discord WHERE discord_id = %s", ctx.author.id)
         if not authordisocrd:
             priv = 1
         else:
             userid = authordisocrd['osu_id']
-            user = await glob.db.fetch(f"SELECT priv FROM users WHERE id='{userid}'")
+            user = await glob.db.fetch("SELECT priv FROM users WHERE id = %s", userid)
             priv = user['priv']
     priv = Privileges(int(priv))
 

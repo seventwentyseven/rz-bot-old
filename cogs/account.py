@@ -54,7 +54,7 @@ async def link(ctx, code=None):
         return await ctx.send(embed=embed)
     
     #*Check if already linked
-    alr = await glob.db.fetch(f"SELECT discord_id FROM discord WHERE `discord_id`='{ctx.author.id}'")
+    alr = await glob.db.fetch("SELECT discord_id FROM discord WHERE discord_id = %s", ctx.author.id)
     if alr:
         embed = discord.Embed(title="Error", description=f"You're already verified, but if somehow you're not contact staff", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
@@ -62,15 +62,15 @@ async def link(ctx, code=None):
     
     #*Check user with matching code
     author_tag = ctx.author.name + "#" + ctx.author.discriminator
-    res = await glob.db.fetch(f"SELECT osu_id, code FROM discord WHERE `code`='{code}' AND `discord_tag`='{author_tag}'")
+    res = await glob.db.fetch("SELECT osu_id, code FROM discord WHERE code = %s AND discord_tag = %s", (code, author_tag))
     userid = res['osu_id']
-    user_osu = await glob.db.fetch(F"SELECT name FROM users WHERE `id`='{userid}'")
+    user_osu = await glob.db.fetch("SELECT name FROM users WHERE id = %s", userid)
     if not res:
         embed = discord.Embed(title="Error", description=f"Wrong code, maybe you made a typo?", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
     try:
-        await glob.db.execute(f"UPDATE discord SET `discord_id`='{ctx.author.id}' WHERE `code`='{code}' AND `discord_tag`='{author_tag}'")
+        await glob.db.execute("UPDATE discord SET discord_id = %s WHERE code = %s AND discord_tag = %s", (ctx.author.id, code, author_tag))
     except Exception as e:
         embed = discord.Embed(title="Critical error", description=f"Weird stuff happened, contact staff", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
@@ -102,7 +102,7 @@ async def link(ctx, code=None):
 async def getuserid(ctx, user=None):
     if user == None:
         return await ctx.send("Invalid syntax")
-    usr = await glob.db.fetch(f"SELECT id FROM users WHERE `name`='{user}'")
+    usr = await glob.db.fetch("SELECT id FROM users WHERE name = %s", user)
     if not usr:
         return await ctx.send("User not found")
     await ctx.send(f"{user}'s id is {usr['id']}")
@@ -125,7 +125,7 @@ async def defaultmode(ctx, mode=None):
         return await ctx.send(embed=embed)
 
     #! Fetch user
-    res = await glob.db.fetch(f"SELECT discord_id, default_mode FROM discord WHERE discord_id={ctx.author.id}")
+    res = await glob.db.fetch("SELECT discord_id, default_mode FROM discord WHERE discord_id=%s", ctx.author.id)
     if not res:
         embed = discord.Embed(
             title="Error", 
@@ -135,7 +135,7 @@ async def defaultmode(ctx, mode=None):
         return await ctx.send(embed=embed)
     
     #! Everything went fine
-    await glob.db.execute(f"UPDATE `discord` SET `default_mode` = '{mode}' WHERE `discord_id` = {ctx.author.id}")
+    await glob.db.execute("UPDATE `discord` SET default_mode = %s WHERE discord_id = %s", (mode, ctx.author.id))
 
     embed = discord.Embed(
         title="Default mode changed successfully",

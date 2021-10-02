@@ -24,7 +24,7 @@ def setup(bot):
 async def changecountry(ctx, country:str=None, *, username:str=None):
     cmd_name = "changecountry"
     #! Permission check
-    author = await glob.db.fetch(f"SELECT osu_id FROM discord WHERE discord_id={ctx.author.id}")
+    author = await glob.db.fetch("SELECT osu_id FROM discord WHERE discord_id = %s", ctx.author.id)
     if not author:
         embed = discord.Embed(
             title="Error", 
@@ -34,7 +34,7 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
         return await ctx.send(embed=embed)
     else:
         author_oid = author['osu_id']
-        author_priv = await glob.db.fetch(f'SELECT priv FROM users WHERE id={author_oid}')
+        author_priv = await glob.db.fetch('SELECT priv FROM users WHERE id = %s', author_oid)
         author_priv = Privileges(int(author_priv['priv']))
         if Privileges.Admin not in author_priv or Privileges.Dangerous not in author_priv:
             embed = discord.Embed(
@@ -61,7 +61,7 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
         return await ctx.send(embed=embed)
     
     # Select username
-    res = await glob.db.fetch(f"SELECT id, name, country FROM users WHERE `name`='{username}'")
+    res = await glob.db.fetch("SELECT id, name, country FROM users WHERE name = %s", username)
     if not res:
         embed = discord.Embed(
             title="Error", 
@@ -72,7 +72,7 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
     
     #! Everything went fine
     userid = res['id']
-    await glob.db.execute(f"UPDATE `users` SET `country`='{country.upper()}' WHERE `id`='{userid}'")
+    await glob.db.execute("UPDATE `users` SET country = %s WHERE id = %s", (country.upper(), userid))
     embed = discord.Embed(
         title="Country Changed", 
         description=f"Successfully changed {res['name']} (ID {res['id']}) country from `{res['country'].upper()}` to `{country.upper()}`",
