@@ -1,11 +1,11 @@
 import cmyui
-
-#Don't touch it. I'm changing it on updates, it's also (will be) used for updater
-version = cmyui.Version(0, 4, 1)
+import aiohttp
+session = aiohttp.ClientSession()
+#Don't touch version or else updater will get autism. I'm the one changing it, not you.
+version = cmyui.Version(0, 4, 2)
 
 #Don't touch this too, it's mysql connection stuff
 db = cmyui.AsyncSQLPool()
-
 rx_modes = {
     "0": "4",
     "1": "5",

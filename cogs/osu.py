@@ -202,15 +202,11 @@ async def profile(ctx, *args):
         )
         if author_discord:
             author_oid = author_discord['osu_id']
-            author_osu = await glob.db.fetch("SELECT id, name, priv FROM users WHERE id = %s", author_oid)
+            author_osu = await glob.db.fetch("SELECT priv FROM users WHERE id = %s", author_oid)
         else:
-            embed = discord.Embed(
-                title="Error", 
-                description=f"You don't have permissions to check profiles of restricted users. (Your profile is not linked)", 
-                color=colors.embeds.red)
-            embed.set_footer(text=glob.embed_footer)
-            return await ctx.send(embed=embed)
-        
+            author_osu = {
+                "priv": 3
+            }
         user_priv = Privileges(int(user_osu['priv']))
         author_priv = Privileges(int(author_osu['priv']))
         #! Check if restricted, if yes check if allowed in config, in no check perms, 
@@ -592,20 +588,17 @@ async def best(ctx, *args):
         )
         if author_discord:
             author_oid = author_discord['osu_id']
-            author_osu = await glob.db.fetch("SELECT id, name, priv FROM users WHERE id = %s", author_oid)
+            author_osu = await glob.db.fetch("SELECT priv FROM users WHERE id = %s", author_oid)
         else:
-            embed = discord.Embed(
-                title="Error", 
-                description=f"You don't have permissions to check profiles of restricted users. (Your profile is not linked)", 
-                color=colors.embeds.red)
-            embed.set_footer(text=glob.embed_footer)
-            return await ctx.send(embed=embed)
+            author_osu = {
+                "priv": 3
+            }
         
         user_priv = Privileges(int(user_osu['priv']))
         author_priv = Privileges(int(author_osu['priv']))
         #! Check if restricted, if yes check if allowed in config, in no check perms, 
         #! if yes check admin commands allowed in public, if no check channel
-        if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
+        if Privileges.Normal not in user_priv and not glob.config.restricted_users_view_by_all:
         # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
             if not author_priv & Privileges.Staff:
                 embed = discord.Embed(
@@ -833,7 +826,7 @@ async def best(ctx, *args):
     #This is where the fun begins
     embed_desc = f"▸ {emotes[score['grade'].upper()]} ▸ **{round(score['pp'], 2)} PP** ▸ {round(float(score['acc']), 2)}%"
     if mode == "0":
-        judgements = f"[{score['n300']}/{score['n100']}]/{score['n50']}/{score['nmiss']}]"
+        judgements = f"[{score['n300']}/{score['n100']}/{score['n50']}/{score['nmiss']}]"
         combo = f"x{score['max_combo']}/{beatmap['max_combo']}"
         desc_3rd_line = f"▸ HP: {beatmap['hp']} ▸ OD: {beatmap['od']} ▸ CS: {beatmap['cs']} ▸ AR: {beatmap['ar']}"
     elif mode == "1":
@@ -1070,20 +1063,17 @@ async def rs(ctx, *args):
         )
         if author_discord:
             author_oid = author_discord['osu_id']
-            author_osu = await glob.db.fetch("SELECT id, name, priv FROM users WHERE id = %s", author_oid)
+            author_osu = await glob.db.fetch("SELECT priv FROM users WHERE id = %s", author_oid)
         else:
-            embed = discord.Embed(
-                title="Error", 
-                description=f"You don't have permissions to check profiles of restricted users. (Your profile is not linked)", 
-                color=colors.embeds.red)
-            embed.set_footer(text=glob.embed_footer)
-            return await ctx.send(embed=embed)
+            author_osu = {
+                "priv": 3
+            }
         
         user_priv = Privileges(int(user_osu['priv']))
         author_priv = Privileges(int(author_osu['priv']))
         #! Check if restricted, if yes check if allowed in config, in no check perms, 
         #! if yes check admin commands allowed in public, if no check channel
-        if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
+        if Privileges.Normal not in user_priv and not glob.config.restricted_users_view_by_all:
         # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
             if not author_priv & Privileges.Staff:
                 embed = discord.Embed(
@@ -1095,8 +1085,8 @@ async def rs(ctx, *args):
 
             if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
                 embed = discord.Embed(
-                    title="Error", 
-                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
+                    title="Error",
+                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels",
                     color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
@@ -1216,7 +1206,7 @@ async def rs(ctx, *args):
     #This is where the fun begins
     embed_desc = f"▸ {emotes[score['grade'].upper()]} ▸ **{round(score['pp'], 2)} PP** ▸ {round(float(score['acc']), 2)}%"
     if mode == "0":
-        judgements = f"[{score['n300']}/{score['n100']}]/{score['n50']}/{score['nmiss']}]"
+        judgements = f"[{score['n300']}/{score['n100']}/{score['n50']}/{score['nmiss']}]"
         combo = f"x{score['max_combo']}/{beatmap['max_combo']}"
         desc_3rd_line = f"▸ HP: {beatmap['hp']} ▸ OD: {beatmap['od']} ▸ CS: {beatmap['cs']} ▸ AR: {beatmap['ar']}"
     elif mode == "1":

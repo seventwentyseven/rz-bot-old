@@ -1,9 +1,15 @@
 import discord
+from discord import http
 from discord.ext import commands
+from discord.ext import tasks
 
+import aiohttp
 import cmyui
 from cmyui import (log, Ansi)
+import datetime
+import json
 import os
+
 
 from const import colors
 from const import constants as const
@@ -34,7 +40,6 @@ print(f"""\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 ŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻ     BBBBBBBBBBBBBBBBB        OOOOOOOOO           TTTTTTTTTTT  
                             {colors.colors.yellow}Version:{colors.colors.end} {glob.version}""")
 print(f'{colors.colors.cyan}Loading...{colors.colors.end}\n')
-
 #-> Set intents
 intents = discord.Intents.all()
 intents.members = True
@@ -84,13 +89,74 @@ async def on_ready():
     print(f"{colors.green}Website:{colors.end} https://seventwentyseven.tk")
     print(f"{colors.green}Github:{colors.end} https://github.com/seventwentyseven/rz-bot")
     print(f"{colors.green}Discord:{colors.end} https://seventwentyseven.tk")
+    #! Tasks
+    #Start updater
+    checkUpdates.start()
 
-@bot.event
-async def on_ready():
-    await glob.db.connect(glob.config.sql)
-    print(f"\n{colors.green}Bot loaded successfully!{colors.end} @ {hourTimestamp()}")
-    print(f"{colors.cyan}Bot Name: {colors.end}{bot.user.name}")
-    return print(f"{colors.cyan}Bot ID:{colors.end} {bot.user.id}")
+#!############### UPDATE CHECKER ################!#
+#Updater values
+class updater():
+    messages_sent = 0
+    version1 = version
+    version2 = version
+glob.updater = updater
+@tasks.loop(seconds=10)#glob.config.update_check_time)
+async def checkUpdates():
+    if glob.config.updater_enabled == False:
+        return
+    cmyui.log(f"Checking for updates...", Ansi.GREEN)
+    
+    # Api
+    async with glob.session.get("https://rz-bot.tk/api/get_latest") as r:
+        resp = await r.json()
+        if resp['status'] != "Success":
+            return cmyui.log("Error occured while checking updates", Ansi.RED)
+        
+        #Assign variables
+        resp = resp['version_info']
+        fetched_version = cmyui.Version(int(resp['major']), int(resp['minor']), int(resp['micro']))
+        glob.updater.version1 = fetched_version
+        #Output
+        if glob.updater.version1 == glob.updater.version2:
+            cmyui.log("No new updates found.")
+        else:
+            cmyui.log("Update Found!", Ansi.GREEN)
+            glob.updater.version2 = glob.updater.version1
+            glob.updater.messages_sent = 0
+            date = datetime.datetime.fromtimestamp(resp['date_released'])
+            print(f"\n\n\n{colors.red}######## NEW UPDATE ########\n")
+            print(f"{colors.yellow}Current Version:{colors.end} {version}")
+            print(f"{colors.yellow}New Version:{colors.end} {fetched_version}")
+            print(f"{colors.yellow}Date released:{colors.end} {date}")
+            print(f"{colors.yellow}\nChanges:{colors.end} \n{resp['description']}")
+            if resp['bugfixes'] == "True":
+                print(f"\n{colors.red}This version contains bugfixes{colors.end}\n")
+            if resp['security_update'] == "True":
+                print(f"\n{colors.red}This version contains security updates{colors.end}\n")
+            print(f"{colors.red}############################{colors.end}\n")
+            
+            # Send message to owners
+            for user_element in glob.config.bot_owners:
+                user = bot.get_user(int(user_element))
+                embed = discord.Embed(
+                    title=f"New {glob.config.bancho_bot_name} update just got released",
+                    description=f"**Current Version:** {version}\n"
+                    f"**New Version:** {fetched_version}\n"
+                    f"**Date Released:** {date}\n"
+                    f"**Changes**: \n{resp['description']}\n",
+                    color=colors.embeds.red
+                )
+                if resp['bugfixes'] == "True":
+                    embed.description += f"\n__**This version contains bugfixes**__\n"
+                if resp['security_update'] == "True":
+                    embed.description += f"\n__**This version contains security updates**__\n"
+                embed.set_footer(text=glob.embed_footer)
+                try:
+                    await user.send(embed=embed)
+                    glob.updater.messages_sent += 1
+                except:
+                    cmyui.log(f"Cannot send update message to {user.name}#{user.discriminator}, skipping", Ansi.RED)
+#!###############################################!#
 
 @bot.command()
 async def ping(ctx):
@@ -124,13 +190,66 @@ async def load(ctx, cog):
     return await ctx.send("Loaded Cog")
 
 @bot.command(aliases=["version"])
-async def _version(ctx):
+async def _version(ctx, input_version:str=None):
     embed = discord.Embed(
         title="Bot Version", 
-        description=f"{glob.version}", 
+        description=f"**{glob.version}**", 
         color=colors.embeds.purple, 
     )
     embed.set_footer(text="Created by def750 and grafika dzifors. © Seventwentyseven.tk 2021")
+    if input_version==None:
+        async with glob.session.get("https://rz-bot.tk/api/get_latest") as r:
+            resp = await r.json()
+            resp = resp['version_info']
+        date = datetime.datetime.fromtimestamp(resp['date_released'])
+        embed.add_field(
+            name="Version Info",
+            value=f"**Date Released:** {date}\n**Changes:**\n{resp['description']}",
+            inline=True
+        )
+        embed.add_field(
+            name="Bot Info",
+            value="**Github Repo:** https://github.com/seventwentyseven/rz-bot\n"
+            **"Website (Not Finished):** https://rz-bot.tk",
+            inline=True
+        )
+    else:
+        if len(input_version) != 5:
+            embed = discord.Embed(
+                title="Invalid Syntax",
+                description=f"Version Argument must be 5 character long. Example: `{glob.config.prefix}version 0.4.1`",
+                color=colors.embeds.red
+            )
+            embed.set_footer(text=glob.embed_footer)
+            return await ctx.send(embed=embed)
+        input_version = input_version.split(".")
+        async with glob.session.get(f"https://rz-bot.tk/api/version_history?major={input_version[0]}&minor={input_version[1]}&micro={input_version[2]}") as r:
+            resp = await r.json()
+            if resp['status'] == "Failed":
+                embed = discord.Embed(
+                    title="Error",
+                    description=f"Version not found in database.",
+                    color=colors.embeds.red
+                )
+                embed.set_footer(text=glob.embed_footer)
+                return await ctx.send(embed=embed)
+            resp = resp['version_info']
+        date = datetime.datetime.fromtimestamp(resp['date_released'])
+        embed.add_field(
+            name="Version Info",
+            value=f"**Date Released:** {date}\n**Changes:**\n{resp['description']}",
+            inline=True
+        )
+        embed.add_field(
+            name="Bot Info",
+            value="**Github Repo:** https://github.com/seventwentyseven/rz-bot\n"
+            **"Website (Not Finished):** https://rz-bot.tk",
+            inline=True
+        )
+   
     return await ctx.send(embed=embed)
+
+#Im a fucking mastermind
+glob.bot = bot
 
 bot.run(glob.config.token)

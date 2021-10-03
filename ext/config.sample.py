@@ -32,6 +32,11 @@ bancho_bot_name = "Ż Bot"
 # Api key from sendgrid.com
 sg_apikey = "Your sendgrid api key"
 
+# Should updater be turned on?
+updater_enabled = True
+# How often should bot check for updates (in minutes)
+update_check_time = 30
+
 #######################
 #      CONSTANTS      #
 #######################
@@ -105,9 +110,6 @@ emotes = {
     "SH": "<:ranksh:853753899072094208>",
     "X": "<:rankx:853753898817028147>",
     "XH": "<:rankxh:853753899206311976>",
-    "jestemsmieje": "<:jestemsmieje:859364580169089054>",
-    "jajco": "<:jajco:859381426703826945>",
-    "smciota": "<:smciota:830041394419597362>"
 }
 
 ##############################
