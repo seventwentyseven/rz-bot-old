@@ -100,7 +100,7 @@ class updater():
     version1 = version
     version2 = version
 glob.updater = updater
-@tasks.loop(seconds=10)#glob.config.update_check_time)
+@tasks.loop(minutes=glob.config.update_check_time)
 async def checkUpdates():
     if glob.config.updater_enabled == False:
         return
@@ -198,7 +198,7 @@ async def _version(ctx, input_version:str=None):
     )
     embed.set_footer(text="Created by def750 and grafika dzifors. © Seventwentyseven.tk 2021")
     if input_version==None:
-        async with glob.session.get("https://rz-bot.tk/api/get_latest") as r:
+        async with glob.session.get(f"https://rz-bot.tk/api/version_history?major={glob.version.major}&minor={glob.version.minor}&micro={glob.version.micro}") as r:
             resp = await r.json()
             resp = resp['version_info']
         date = datetime.datetime.fromtimestamp(resp['date_released'])
