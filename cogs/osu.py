@@ -99,10 +99,10 @@ async def profile(ctx, *args):
             user = args["-u"][3:-1]
             if str(ctx.author.id) == str(user):
                 self_execute = True
-                desc1 = f"You don't have your osu profile linked, type `{prefix}help link` if you need help.\n You can always try with your 727 name\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
+                desc1 = f"You don't have your osu profile linked, type `{prefix}help link` if you need help.\n You can always try with your {glob.config.servername} name\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
             else:
                 self_execute = False
-                desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their 727.tk username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
+                desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their {glob.config.servername} username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
             
             #* Database stuff
             user_discord = await glob.db.fetch(
@@ -139,10 +139,10 @@ async def profile(ctx, *args):
             if not user_osu:
                 embed = discord.Embed(title="Error",
                 description=f"User not found, maybe they don't have discord connected?\n"
-                             "You can also try with their 727.tk username\nRemember that " 
+                            f"You can also try with their {glob.config.servername} username\nRemember that " 
                              "names like `-u s e r-` must be put in quotation marks for example "
                              '`.profile -u "-u s e r-"`\n'
-                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
+                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
@@ -168,7 +168,7 @@ async def profile(ctx, *args):
             embed = discord.Embed(
                 title="Error",
                 description=f"You don't have your osu profile linked, type `{prefix}help link` "
-                            f"if you need help.\nYou can always try with your 727 name"
+                            f"if you need help.\nYou can always try with your {glob.config.servername} name"
                             f"\nRemember that names like `-u s e r-` must be put in quotation marks "
                             f"for example "+'`.profile -u "-u s e r-"`'
                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`", 
@@ -485,10 +485,10 @@ async def best(ctx, *args):
             user = args["-u"][3:-1]
             if str(ctx.author.id) == str(user):
                 self_execute = True
-                desc1 = f"You don't have your osu profile linked, type `{prefix}help link` if you need help.\n You can always try with your 727 name\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
+                desc1 = f"You don't have your osu profile linked, type `{prefix}help link` if you need help.\n You can always try with your {glob.config.servername} name\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
             else:
                 self_execute = False
-                desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their 727.tk username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
+                desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their {glob.config.servername} username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
             
             #* Database stuff
             user_discord = await glob.db.fetch(
@@ -525,10 +525,10 @@ async def best(ctx, *args):
             if not user_osu:
                 embed = discord.Embed(title="Error",
                 description=f"User not found, maybe they don't have discord connected?\n"
-                             "You can also try with their 727.tk username\nRemember that " 
+                            f"You can also try with their {glob.config.servername} username\nRemember that " 
                              "names like `-u s e r-` must be put in quotation marks for example "
                              '`.profile -u "-u s e r-"`\n'
-                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
+                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
@@ -554,7 +554,7 @@ async def best(ctx, *args):
             embed = discord.Embed(
                 title="Error",
                 description=f"You don't have your osu profile linked, type `{prefix}help link` "
-                            f"if you need help.\nYou can always try with your 727 name"
+                            f"if you need help.\nYou can always try with your {glob.config.servername} name"
                             f"\nRemember that names like `-u s e r-` must be put in quotation marks "
                             f"for example "+'`.profile -u "-u s e r-"`'
                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`", 
@@ -960,10 +960,10 @@ async def rs(ctx, *args):
             user = args["-u"][3:-1]
             if str(ctx.author.id) == str(user):
                 self_execute = True
-                desc1 = f"You don't have your osu profile linked, type `{prefix}help link` if you need help.\n You can always try with your 727 name\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
+                desc1 = f"You don't have your osu profile linked, type `{prefix}help link` if you need help.\n You can always try with your {glob.config.servername} name\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
             else:
                 self_execute = False
-                desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their 727.tk username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
+                desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their {glob.config.servername} username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
             
             #* Database stuff
             user_discord = await glob.db.fetch(
@@ -1000,10 +1000,10 @@ async def rs(ctx, *args):
             if not user_osu:
                 embed = discord.Embed(title="Error",
                 description=f"User not found, maybe they don't have discord connected?\n"
-                             "You can also try with their 727.tk username\nRemember that " 
+                            f"You can also try with their {glob.config.servername} username\nRemember that " 
                              "names like `-u s e r-` must be put in quotation marks for example "
                              '`.profile -u "-u s e r-"`\n'
-                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
+                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
@@ -1029,7 +1029,7 @@ async def rs(ctx, *args):
             embed = discord.Embed(
                 title="Error",
                 description=f"You don't have your osu profile linked, type `{prefix}help link` "
-                            f"if you need help.\nYou can always try with your 727 name"
+                            f"if you need help.\nYou can always try with your {glob.config.servername} name"
                             f"\nRemember that names like `-u s e r-` must be put in quotation marks "
                             f"for example "+'`.profile -u "-u s e r-"`'
                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`", 
