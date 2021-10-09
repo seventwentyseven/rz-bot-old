@@ -128,6 +128,14 @@ async def sendtemplate(ctx, *args):
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
 
+    #Check channel
+    if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
+        embed = discord.Embed(
+            title="Error",
+            description=f"Due to security reasons, usage of this command is only allowed in admin channels",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
     #Get author perms
     author = await glob.db.fetch("SELECT osu_id FROM discord WHERE discord_id=%s", ctx.author.id)
     if not author:

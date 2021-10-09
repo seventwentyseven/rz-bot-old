@@ -70,4 +70,11 @@ helpresponses = {
         "example": f"`{p}changecountry PL def750`",
         "info": f"Arguments: \n`<2-letter country code>` - Specify country, if you don't know country code. Google it.\n`<username>` - User's nickname on your server"
     },
+    "sendtemplate": {
+        "privileges": Privileges.Admin,
+        "header": "Send template",
+        "description": "Send email to user from template",
+        "example": f"`{p}sendtemplate -u def750 -template cheating",
+        "info": f"Arguments: \n`-template <template name>` - Specify template, type `{p}sendtemplate -list` to see list of all aviable templates\n`-u username` - your server"
+    },
 }

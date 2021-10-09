@@ -50,7 +50,7 @@ async def help(ctx, cmd_name:str = "None"):
         )
         #Help admin section
         if Privileges.Mod in priv or Privileges.Dangerous in priv or Privileges.Admin in priv:
-            embed.description += "**Admin:** `rlc`, `load`, `changecountry`"
+            embed.description += "**Admin:** `rlc`, `load`, `changecountry`, `sendtemplate`"
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
     
