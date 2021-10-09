@@ -74,7 +74,7 @@ helpresponses = {
         "privileges": Privileges.Admin,
         "header": "Send template",
         "description": "Send email to user from template",
-        "example": f"`{p}sendtemplate -u def750 -template cheating",
+        "example": f"`{p}sendtemplate -u def750 -template cheating`",
         "info": f"Arguments: \n`-template <template name>` - Specify template, type `{p}sendtemplate -list` to see list of all aviable templates\n`-u username` - your server"
     },
 }
