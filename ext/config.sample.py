@@ -50,6 +50,12 @@ domains = {
     "avatar": "a.your.domain",
 }
 
+#Your email list
+class emails:
+    admin = "admin@youremaildomain.com"
+    support = "support@youremaildomain.com"
+    accounts = "accounts@youremaildomain.com"
+
 # Channel config
 channels = {
     #If you use one chat for multiple logs, just set same ID, it doesn't matter
@@ -99,7 +105,8 @@ roles = {
     "nicknameban": "id"
 }
 
-#Used in embeds, it's explained in readme
+# Used in embeds, it's explained in readme
+# If you are too lazy to add it yourself, ask me on dms (def750#2137) I'll add your bot to our emote server
 emotes = {
     "F": "<:rankf:853753898954391572>",
     "D": "<:rankd:853753898682155009>",
@@ -147,6 +154,7 @@ commands = {
 
     # Administration
     "checknotes": True,
+    "changecountry": True
     
 }
 
@@ -201,3 +209,45 @@ opt_best = {
 
 #Funi texts for people who hate catch like us
 no_catch = True
+
+#Contact stuff for emails
+contact = {
+    "email": "your contact email",
+    "discord": "yourdiscord#tag"
+}
+
+#Customise it if you're gonna use mailer module
+mailtemplates = {
+    "cheating": {
+        "title": f"{servername} - Account restricted", #Email title
+        "email_content": "Your account has been restricted for cheating<br>" #Email content
+                        f"If you think that account restriction has been unfairly imposed contact us on "
+                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f"<br><br>Regards, {servername} support.", #<br> is line break (new line)
+        "email_used": emails.accounts #Email that will be used to send email, specified above
+    },
+    "pp_limit": {
+        "title": f"{servername} - Account restricted",
+        "email_content": "Your account has been restricted for reaching pp limit (700)<br>" #Set your own pp value of autoban corresponding to gulag config
+                        f"If you think that account restriction has been unfairly imposed contact us on "
+                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f"<br><br>Regards, {servername} support.",
+        "email_used": emails.accounts
+    },
+    "multiaccounting": {
+        "title": f"{servername} - Account restricted",
+        "email_content": "Your account has been restricted for multiaccounting"
+                        f"If you think that account restriction has been unfairly imposed contact us on "
+                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f"<br><br>Regards, {servername} support.",
+        "email_used": emails.accounts
+    },
+    "impersonation": {
+        "title": f"{servername} - Account restricted",
+        "email_content": "Your account has been restricted for impersonation"
+                        f"If you think that account restriction has been unfairly imposed contact us on "
+                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f"<br><br>Regards, {servername} support.",
+        "email_used": emails.accounts
+    },
+}
