@@ -210,7 +210,7 @@ async def _version(ctx, input_version:str=None):
         embed.add_field(
             name="Bot Info",
             value="**Github Repo:** https://github.com/seventwentyseven/rz-bot\n"
-            **"Website (Not Finished):** https://rz-bot.tk",
+            "**Website (Not Finished):** https://rz-bot.tk",
             inline=True
         )
     else:
@@ -243,7 +243,7 @@ async def _version(ctx, input_version:str=None):
         embed.add_field(
             name="Bot Info",
             value="**Github Repo:** https://github.com/seventwentyseven/rz-bot\n"
-            **"Website (Not Finished):** https://rz-bot.tk",
+            "**Website (Not Finished):** https://rz-bot.tk",
             inline=True
         )
    
