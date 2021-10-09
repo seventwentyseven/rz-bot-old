@@ -253,7 +253,7 @@ async def sendtemplate(ctx, *args):
         except:
             embed = discord.Embed(
                 title="Error",
-                description=f"Cannot send message to {user_object_d.name}#{user_object_d.discriminator}, trying to send email only",
+                description=f"Cannot send message on DMs, trying to send email only",
                 color=colors.embeds.red
             )
             embed.set_footer(text=glob.embed_footer)
