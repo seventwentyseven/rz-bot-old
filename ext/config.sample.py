@@ -5,37 +5,35 @@
 #        MAIN SECTION        #
 ##############################
 # Discord api key
-token = "your discord bot api token"
+token = "your bot token"
 # Bot ID
-bot_id = "bot id"
+bot_id = "your bot id"
 # Sql login cridentials
 sql = {
-    "host": "machine ip",
-    "user": "database user",
-    "password": "password",
+    "host": "sql db ip",
+    "user": "sql user",
+    "password": "sql password",
     "db": "gulag",
 }
 # Bot owner(s), people with full access to (almost) everything, skips permission checks
-# You can delete or add one, also for easier reading you can add comment below like you see
-# To add new owner just go to the new line and do "<ownerid>" remember to put comma after this
-# So it will look like for example "12345678901234567",
 bot_owners = [
-    "owner one discord id", #def750
-    "owner 2 discord id"  #dzifors
+    "discord id 1", #you can put owner username to know who you addced here
+    "discord id 2", #dzifors, you can look at how it looks and add another owner or delete one
+                    #you can also always ask me for help
 ]
 # Bot prefix
 prefix = "."
 # How do you call your server
-servername = "gulagserver"
+servername = "your server name"
 # Your bancho bot name (on osu server)
 bancho_bot_name = "Ż Bot"
-# Api key from sendgrid.com
-sg_apikey = "Your sendgrid api key"
+# Api key from sendgrid
+sg_apikey = "sendgrid api key"
 
-# Should updater be turned on?
+# Should be update checker turned on?
 updater_enabled = True
 # How often should bot check for updates (in minutes)
-update_check_time = 30
+update_check_time = 10
 
 #######################
 #      CONSTANTS      #
@@ -50,11 +48,13 @@ domains = {
     "avatar": "a.your.domain",
 }
 
-#Your email list
-class emails:
-    admin = "admin@youremaildomain.com"
-    support = "support@youremaildomain.com"
-    accounts = "accounts@youremaildomain.com"
+#Your email list, no need to change it if you are not going to use mailer module
+# If you're gonna use it, i recommend going into mailtemplates and setting up your emails
+emails = {
+    "admin": "admin@your.domain",
+    "support": "support@your.domain",
+    "accounts": "accounts@your.domain",
+}
 
 # Channel config
 channels = {
@@ -78,8 +78,7 @@ channels = {
     "mod_chat": "id",
     "owner_chat": "id"
 }
-
-# Role Config, role id's from discord
+# Role Config
 roles = {
     #Developer/owner
     "dangerous": "id",
@@ -91,7 +90,7 @@ roles = {
     #Beatmap nominator
     "bat": "id",
     #Staff member that is no longer staff
-    "alumini": "id",
+    "alumni": "id",
     #Premium
     "donatorp": "id",
     #Donator
@@ -105,7 +104,7 @@ roles = {
     "nicknameban": "id"
 }
 
-# Used in embeds, it's explained in readme
+#Used in embeds, it's explained in readme.
 # If you are too lazy to add it yourself, ask me on dms (def750#2137) I'll add your bot to our emote server
 emotes = {
     "F": "<:rankf:853753898954391572>",
@@ -147,7 +146,7 @@ commands = {
     "rs": True,
     "profile": True,
     "leaderboard": True,
-    
+
     # Mailer
     "sendmail": True,
     "sendtemplate": True,
@@ -155,13 +154,13 @@ commands = {
     # Administration
     "checknotes": True,
     "changecountry": True
-    
+
 }
 
 #############################
 #    COMMAND RESTRICTION    #
 #############################
-#Should admin commands be restricted only to admin channels
+#Should usage of admin commands be restricted only to admin channels
 #I strongly recommend leaving that as true due to users privacy.
 restrict_admin_commands = True
 
@@ -190,7 +189,7 @@ restricted_users_view_by_all = False
 # If you want to edit it or add new, they are in main.py
 footer_type = 0
 
-# Exec command, aviable only for bot owners specified above. It allows to directly 
+# Exec command, aviable only for bot owners specified above. It allows to directly
 # execute python script so it's extremelly dangerous.
 exec_cmd = True
 
@@ -202,18 +201,20 @@ exec_cmd = True
 
 # Best command
 opt_best = {
-    # Minimum pp for -g argument in best command, 
+    # Minimum pp for -g argument in best command,
     # keep it above 15 to avoid lags with database
-    "min_g_value": 20
+    "min_g_value": 20,
+    # Should -g argument fetch failed scores
+    # Default: False
+    "g_fetch_failed": False
 }
-
 #Funi texts for people who hate catch like us
 no_catch = True
 
 #Contact stuff for emails
 contact = {
-    "email": "your contact email",
-    "discord": "yourdiscord#tag"
+    "email": "seven27tk@gmail.com",
+    "discord": "def750#2137"
 }
 
 #Customise it if you're gonna use mailer module
@@ -221,33 +222,33 @@ mailtemplates = {
     "cheating": {
         "title": f"{servername} - Account restricted", #Email title
         "email_content": "Your account has been restricted for cheating<br>" #Email content
-                        f"If you think that account restriction has been unfairly imposed contact us on "
-                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f"If you think that account restriction has been unfairly imposed contact us on"
+                        f" {contact['email']} or send DM to {contact['discord']} on discord"
                         f"<br><br>Regards, {servername} support.", #<br> is line break (new line)
-        "email_used": emails.accounts #Email that will be used to send email, specified above
+        "email_used": emails['accounts'] #Email that will be used to send email, specified above
     },
     "pp_limit": {
         "title": f"{servername} - Account restricted",
         "email_content": "Your account has been restricted for reaching pp limit (700)<br>" #Set your own pp value of autoban corresponding to gulag config
                         f"If you think that account restriction has been unfairly imposed contact us on "
-                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f" {contact['email']} or send DM to {contact['discord']} on discord"
                         f"<br><br>Regards, {servername} support.",
-        "email_used": emails.accounts
+        "email_used": emails['accounts']
     },
     "multiaccounting": {
         "title": f"{servername} - Account restricted",
         "email_content": "Your account has been restricted for multiaccounting"
                         f"If you think that account restriction has been unfairly imposed contact us on "
-                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f" {contact['email']} or send DM to {contact['discord']} on discord"
                         f"<br><br>Regards, {servername} support.",
-        "email_used": emails.accounts
+        "email_used": emails['accounts']
     },
     "impersonation": {
         "title": f"{servername} - Account restricted",
         "email_content": "Your account has been restricted for impersonation"
                         f"If you think that account restriction has been unfairly imposed contact us on "
-                        f"{contact['email']} or send DM to {contact['discord']} on discord"
+                        f" {contact['email']} or send DM to {contact['discord']} on discord"
                         f"<br><br>Regards, {servername} support.",
-        "email_used": emails.accounts
+        "email_used": emails['accounts']
     },
 }

@@ -15,7 +15,7 @@ class account(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    
+
 
 def setup(bot):
     bot.add_cog(account(bot))
@@ -35,14 +35,14 @@ async def link(ctx, code=None):
     """Link the user with the osu account"""
     #!Delete execution command
     await ctx.message.delete()
-    
+
     #!Simple checks
     #*If code not specified
     if code == None:
         embed = discord.Embed(title="Invalid Syntax", description=f"You must specify code\nType `{prefix}help link` if you need help, including how to get code", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #*If code not a digit or len not 5
     if code.isdigit() == False:
         embed = discord.Embed(title="Invalid Syntax", description=f"Code must be 5-digit number\nType `{prefix}help link` if you need help, including how to get code", color=colors.embeds.red)
@@ -52,14 +52,14 @@ async def link(ctx, code=None):
         embed = discord.Embed(title="Invalid Syntax", description=f"Code must be 5-digit long, not shorter, not longer\nType `{prefix}help link` if you need help, including how to get code", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #*Check if already linked
     alr = await glob.db.fetch("SELECT discord_id FROM discord WHERE discord_id = %s", ctx.author.id)
     if alr:
         embed = discord.Embed(title="Error", description=f"You're already verified, but if somehow you're not contact staff", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #*Check user with matching code
     author_tag = ctx.author.name + "#" + ctx.author.discriminator
     res = await glob.db.fetch("SELECT osu_id, code FROM discord WHERE code = %s AND discord_tag = %s", (code, author_tag))
@@ -76,7 +76,7 @@ async def link(ctx, code=None):
         embed.set_footer(text=glob.embed_footer)
         await ctx.send(embed=embed)
         return log(f"Error occured while executing 'link' by '{ctx.author.name}#{ctx.author.discriminator}'\nMessage: {e}", Ansi.RED)
-    
+
     #!Everything went fine, send embed
     embed = discord.Embed(title="Account linked successfully", description=f"You linked your osu account on {glob.config.servername} `{user_osu['name']}`, ID: `{userid}`, with this discord account (<@{ctx.author.id}>)", color=colors.embeds.green)
     embed.set_footer(text=glob.embed_footer)
@@ -95,7 +95,7 @@ async def link(ctx, code=None):
     embed = discord.Embed(title="User Verified", description=f"User <@{ctx.author.id}> Successfully verified with code: {code}, OSUID: {res['osu_id']}", color=colors.embeds.green)
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text=glob.embed_footer)
-    return await verlogs.send(embed=embed) 
+    return await verlogs.send(embed=embed)
 
 
 @commands.command()
@@ -106,17 +106,17 @@ async def getuserid(ctx, user=None):
     if not usr:
         return await ctx.send("User not found")
     await ctx.send(f"{user}'s id is {usr['id']}")
-   
+
 @commands.command()
 async def defaultmode(ctx, mode=None):
     cmd_name = "defaultmode"
-    
+
     #! Syntax check
     if mode == None:
         embed = discord.Embed(title="Error", description=f"You need to specify mode, type `{prefix}help {cmd_name}` if you need help.", color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     try:
         mode = const.modes[str(mode)]
     except:
@@ -128,12 +128,12 @@ async def defaultmode(ctx, mode=None):
     res = await glob.db.fetch("SELECT discord_id, default_mode FROM discord WHERE discord_id=%s", ctx.author.id)
     if not res:
         embed = discord.Embed(
-            title="Error", 
+            title="Error",
             description=f"You need to have your {glob.config.servername} account linked, type `{prefix}help {cmd_name}\nType `{prefix}help link` if you need help with linking.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #! Everything went fine
     await glob.db.execute("UPDATE `discord` SET default_mode = %s WHERE discord_id = %s", (mode, ctx.author.id))
 

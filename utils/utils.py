@@ -10,7 +10,7 @@ def parseArgs(args:list, allowed_args:list):
                 dic[current_key] = []
             else:
                 dic[current_key].append(el)
-            
+
         for key, val in dic.items():
             dic[key] = " ".join(val)
     except KeyError:

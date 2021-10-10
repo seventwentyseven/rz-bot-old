@@ -29,7 +29,7 @@ emotes = glob.config.emotes
 class osu(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-            
+
 
 def setup(bot):
     bot.add_cog(osu(bot))
@@ -47,19 +47,19 @@ async def profile(ctx, *args):
     #!Check if module & command disabled
     if glob.config.modules["osu"] == False:
         embed = discord.Embed(
-            title="Error", 
-            description="This module has been disabled by administrator.", 
+            title="Error",
+            description="This module has been disabled by administrator.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
     if glob.config.commands["profile"] == False:
         embed = discord.Embed(
-            title="Error", 
-            description="This command has been disabled by administrator.", 
+            title="Error",
+            description="This command has been disabled by administrator.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-        
+
     #!Check if user is restricted (role)
     if glob.config.restricted_access['profile'] == False:
         #TODO: Optimize this, as for loop for just roles is stupid idea but works for now
@@ -68,8 +68,8 @@ async def profile(ctx, *args):
                 #! THIS CHECKS FOR ROLE, NOT PERMS
                 # Perm check from osu is in config and lower part of code.
                 # Under restricted_users_view_by_all and restricted_access
-                embed = discord.Embed(title="Error", 
-                description=f"You can't use `{prefix}{cmd_name}` because you're restricted!", 
+                embed = discord.Embed(title="Error",
+                description=f"You can't use `{prefix}{cmd_name}` because you're restricted!",
                 color=colors.embeds.red
                 )
                 embed.set_footer(text=glob.embed_footer)
@@ -82,13 +82,13 @@ async def profile(ctx, *args):
     if len(args_as_list) == 0:
         pass
     elif args_as_list[0] not in allowed_args:
-        embed = discord.Embed(title="Error", 
-        description=f"First argument is incorrect, check `{prefix}help {cmd_name}` if you need help", 
+        embed = discord.Embed(title="Error",
+        description=f"First argument is incorrect, check `{prefix}help {cmd_name}` if you need help",
         color=colors.embeds.red
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #! Parse user
     if "-u" in args:
         if len(args["-u"]) > 15:
@@ -103,20 +103,20 @@ async def profile(ctx, *args):
             else:
                 self_execute = False
                 desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their {glob.config.servername} username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
-            
+
             #* Database stuff
             user_discord = await glob.db.fetch(
                 "SELECT osu_id, default_mode, discord_id FROM discord WHERE discord_id = %s", user
             )
-            
+
             #! User not found, in this case not linked
             if not user_discord:
                 embed = discord.Embed(title="Error",
-                description=f"{desc1}.\nIf you need help with this command type `{prefix}help {cmd_name}`", 
+                description=f"{desc1}.\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
-            
+
             #* Get osu info
             userid = user_discord["osu_id"]
             user_osu = await glob.db.fetch(
@@ -139,7 +139,7 @@ async def profile(ctx, *args):
             if not user_osu:
                 embed = discord.Embed(title="Error",
                 description=f"User not found, maybe they don't have discord connected?\n"
-                            f"You can also try with their {glob.config.servername} username\nRemember that " 
+                            f"You can also try with their {glob.config.servername} username\nRemember that "
                              "names like `-u s e r-` must be put in quotation marks for example "
                              '`.profile -u "-u s e r-"`\n'
                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
@@ -158,7 +158,7 @@ async def profile(ctx, *args):
         #Not specified, get author id and check if linked
         user = ctx.author.id
         self_execute = True
-        
+
         #* Database stuff
         user_discord = await glob.db.fetch(
             "SELECT osu_id, default_mode, discord_id FROM discord WHERE discord_id = %s", user
@@ -171,11 +171,11 @@ async def profile(ctx, *args):
                             f"if you need help.\nYou can always try with your {glob.config.servername} name"
                             f"\nRemember that names like `-u s e r-` must be put in quotation marks "
                             f"for example "+'`.profile -u "-u s e r-"`'
-                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`", 
+                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
-        
+
         #* Get osu info
         userid = user_discord["osu_id"]
         user_osu = await glob.db.fetch(
@@ -189,7 +189,7 @@ async def profile(ctx, *args):
     #!Ż bot is uncheckable
     if user_osu['id'] == 1:
         embed = discord.Embed(
-        title="Error", 
+        title="Error",
         description=f"Well, you can't check {glob.config.bancho_bot_name} on discord. For some reason it just won't work",
         color=colors.embeds.red)
         embed.set_footer(text=f"Bot Version: {version}")
@@ -209,22 +209,22 @@ async def profile(ctx, *args):
             }
         user_priv = Privileges(int(user_osu['priv']))
         author_priv = Privileges(int(author_osu['priv']))
-        #! Check if restricted, if yes check if allowed in config, in no check perms, 
+        #! Check if restricted, if yes check if allowed in config, in no check perms,
         #! if yes check admin commands allowed in public, if no check channel
         if not user_priv & Privileges.Normal and not glob.config.restricted_users_view_by_all:
         # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
             if not author_priv & Privileges.Staff:
                 embed = discord.Embed(
-                    title="Error", 
-                    description=f"You don't have permissions to check profiles of restricted users.", 
+                    title="Error",
+                    description=f"You don't have permissions to check profiles of restricted users.",
                     color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
 
             if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
                 embed = discord.Embed(
-                    title="Error", 
-                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
+                    title="Error",
+                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels",
                     color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
@@ -274,16 +274,16 @@ async def profile(ctx, *args):
     # No mods, assign mode and mods
         mode_gulag = mode
         mode_mods = "vn"
-    
+
     #! API request to get status
     #TODO: Move to aiohttp as this shit below is not async.
     response = requests.get(f"https://{glob.config.domains['api']}/api/get_player_status?id={userid}")
     json_object = json.loads(response.text)
     req = json_object["player_status"]
-    
+
     #* Current Time
     time1 = datetime.datetime.now()
-    
+
     user_api = {}
     if req['online'] == True:
         user_api["status"] = ["🟢", "Online"]
@@ -322,13 +322,13 @@ async def profile(ctx, *args):
         rank_country = int(lb_country.index({'id': int(userid)}))+1
     except:
         rank_country = 0
-    
+
 
     #!Get user stats
     user_stats = await glob.db.fetch("SELECT * FROM stats WHERE id = %s AND mode = %s", (userid, mode_gulag))
-    
+
     #* Calculate stuff needed for userinfo block
-    
+
     #  Transform user priv to make them look cool 😎
     user_priv = getUserGroupList(user_osu['priv'])
     userpriv = ""
@@ -347,7 +347,7 @@ async def profile(ctx, *args):
     #* Build embed description
     #*Header (author field)
     embed_header = f"{user_osu['name']}'s Profile"
-    
+
     #*Description header
     embed_dsc_header = f"In osu!{const.mode_names[mode].capitalize()}"
     #Check if mod is vanilla, if not add mod name
@@ -393,21 +393,21 @@ async def profile(ctx, *args):
 
    #!Send Embed
     embed = discord.Embed(
-        title=embed_dsc_header, 
+        title=embed_dsc_header,
         description=f"{embed_description}",
         color=ctx.author.color
     )
     embed.set_author(
-        name=embed_header, 
-        url=f"https://{glob.config.domains['main']}/u/{user_osu['id']}", 
+        name=embed_header,
+        url=f"https://{glob.config.domains['main']}/u/{user_osu['id']}",
         icon_url=f"https://{glob.config.domains['main']}/static/images/flags/{user_osu['country'].upper()}.png"
     )
     embed.set_thumbnail(
         url=f"https://{glob.config.domains['avatar']}/{userid}"
     )
     embed.add_field(
-        name="User Info", 
-        value=embed_block_userinfo, 
+        name="User Info",
+        value=embed_block_userinfo,
         inline=False
     )
     embed.set_footer(
@@ -433,19 +433,19 @@ async def best(ctx, *args):
     #!Check if module & command disabled
     if glob.config.modules["osu"] == False:
         embed = discord.Embed(
-            title="Error", 
-            description="This module has been disabled by administrator.", 
+            title="Error",
+            description="This module has been disabled by administrator.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
     if glob.config.commands["best"] == False:
         embed = discord.Embed(
-            title="Error", 
-            description="This command has been disabled by administrator.", 
+            title="Error",
+            description="This command has been disabled by administrator.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-        
+
     #!Check if user is restricted (role)
     if glob.config.restricted_access['best'] == False:
         #TODO: Optimize this, as for loop for just roles is stupid idea but works for now
@@ -454,8 +454,8 @@ async def best(ctx, *args):
                 #! THIS CHECKS FOR ROLE, NOT PERMS
                 # Perm check from osu is in config and lower part of code.
                 # Under restricted_users_view_by_all and restricted_access
-                embed = discord.Embed(title="Error", 
-                description=f"You can't use `{prefix}{cmd_name}` because you're restricted!", 
+                embed = discord.Embed(title="Error",
+                description=f"You can't use `{prefix}{cmd_name}` because you're restricted!",
                 color=colors.embeds.red
                 )
                 embed.set_footer(text=glob.embed_footer)
@@ -468,13 +468,13 @@ async def best(ctx, *args):
     if len(args_as_list) == 0:
         pass
     elif args_as_list[0] not in allowed_args:
-        embed = discord.Embed(title="Error", 
-        description=f"First argument is incorrect, check `{prefix}help {cmd_name}` if you need help", 
+        embed = discord.Embed(title="Error",
+        description=f"First argument is incorrect, check `{prefix}help {cmd_name}` if you need help",
         color=colors.embeds.red
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #! Parse user
     if "-u" in args:
         if len(args["-u"]) > 15:
@@ -489,20 +489,20 @@ async def best(ctx, *args):
             else:
                 self_execute = False
                 desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their {glob.config.servername} username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
-            
+
             #* Database stuff
             user_discord = await glob.db.fetch(
                 "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s", user
             )
-            
+
             #! User not found, in this case not linked
             if not user_discord:
                 embed = discord.Embed(title="Error",
-                description=f"{desc1}.\nIf you need help with this command type `{prefix}help {cmd_name}`", 
+                description=f"{desc1}.\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
-            
+
             #* Get osu info
             userid = user_discord["osu_id"]
             user_osu = await glob.db.fetch(
@@ -525,7 +525,7 @@ async def best(ctx, *args):
             if not user_osu:
                 embed = discord.Embed(title="Error",
                 description=f"User not found, maybe they don't have discord connected?\n"
-                            f"You can also try with their {glob.config.servername} username\nRemember that " 
+                            f"You can also try with their {glob.config.servername} username\nRemember that "
                              "names like `-u s e r-` must be put in quotation marks for example "
                              '`.profile -u "-u s e r-"`\n'
                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
@@ -544,7 +544,7 @@ async def best(ctx, *args):
         #Not specified, get author id and check if linked
         user = ctx.author.id
         self_execute = True
-        
+
         #* Database stuff
         user_discord = await glob.db.fetch(
             "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s ", user
@@ -557,11 +557,11 @@ async def best(ctx, *args):
                             f"if you need help.\nYou can always try with your {glob.config.servername} name"
                             f"\nRemember that names like `-u s e r-` must be put in quotation marks "
                             f"for example "+'`.profile -u "-u s e r-"`'
-                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`", 
+                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
-        
+
         #* Get osu info
         userid = user_discord["osu_id"]
         user_osu = await glob.db.fetch(
@@ -575,7 +575,7 @@ async def best(ctx, *args):
     #!Ż bot is uncheckable
     if user_osu['id'] == 1:
         embed = discord.Embed(
-        title="Error", 
+        title="Error",
         description=f"Well, you can't check {glob.config.bancho_bot_name} on discord. For some reason it just won't work",
         color=colors.embeds.red)
         embed.set_footer(text=f"Bot Version: {version}")
@@ -593,29 +593,29 @@ async def best(ctx, *args):
             author_osu = {
                 "priv": 3
             }
-        
+
         user_priv = Privileges(int(user_osu['priv']))
         author_priv = Privileges(int(author_osu['priv']))
-        #! Check if restricted, if yes check if allowed in config, in no check perms, 
+        #! Check if restricted, if yes check if allowed in config, in no check perms,
         #! if yes check admin commands allowed in public, if no check channel
         if Privileges.Normal not in user_priv and not glob.config.restricted_users_view_by_all:
         # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
             if not author_priv & Privileges.Staff:
                 embed = discord.Embed(
-                    title="Error", 
-                    description=f"You don't have permissions to check profiles of restricted users.", 
+                    title="Error",
+                    description=f"You don't have permissions to check profiles of restricted users.",
                     color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
 
             if glob.config.restrict_admin_commands == True and str(ctx.channel.category_id) != glob.config.channels['admin_stuff']:
                 embed = discord.Embed(
-                    title="Error", 
-                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels", 
+                    title="Error",
+                    description=f"Due to security reasons, viewing restricted people profiles is only available in admin channels",
                     color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
-    
+
     # continue as normal here if they aren't restricted/they are allowed to view profile
     #! FINALLY CHECK MODE
     if "-m" in args:
@@ -670,7 +670,7 @@ async def best(ctx, *args):
     response = requests.get(f"https://{glob.config.domains['api']}/api/get_player_status?id={userid}")
     json_object = json.loads(response.text)
     req = json_object["player_status"]
-    
+
     if req['online'] == True:
         user_status = ["🟢", "Online"]
     else:
@@ -693,7 +693,7 @@ async def best(ctx, *args):
         if g < float(glob.config.opt_best['min_g_value']):
             await ctx.send(f"-g argument must be above {glob.config.opt_best['min_g_value']}\nAutomatically changed", delete_after=10)
             g = float(glob.config.opt_best['min_g_value'])
-        
+
         #SQL Stuff
         if glob.config.opt_best['g_fetch_failed'] == False:
             if mode_mods == "vn":
@@ -712,7 +712,7 @@ async def best(ctx, *args):
 
         g_amt = res[0]['amount']
 
-        #!Build embed    
+        #!Build embed
         emb_footer = f"{user_status[0]} {user_osu['name']} is now {user_status[1].lower()} on {glob.config.servername} | {glob.embed_footer}"
         if self_execute == True:
             header_author = f"Your Bests"
@@ -721,12 +721,12 @@ async def best(ctx, *args):
             header_author = f"{user_osu['name']}'s' Bests"
             desc_prefix = f"{user_osu['name']} has"
         embed = discord.Embed(
-            title=f"", 
-            description=f"▸ {desc_prefix} **{g_amt}** plays worth over **{g} PP**", 
+            title=f"",
+            description=f"▸ {desc_prefix} **{g_amt}** plays worth over **{g} PP**",
             color=ctx.author.color)
         embed.set_author(
-            name=header_author, 
-            url=f"https://{glob.config.domains['main']}/u/{userid}", 
+            name=header_author,
+            url=f"https://{glob.config.domains['main']}/u/{userid}",
             icon_url=f"https://{glob.config.domains['main']}/static/images/flags/{user_osu['country'].upper()}.png")
         embed.set_thumbnail(url=f"https://{glob.config.domains['avatar']}/{userid}")
         embed.set_footer(text=emb_footer)
@@ -742,7 +742,7 @@ async def best(ctx, *args):
             return await ctx.send(embed=embed)
         else:
             score_num = int(score_num)
-        
+
         if score_num < 1 or score_num > 100: #WYSI
             embed = discord.Embed(title="Invalid Syntax", description=f"`-n` argument must be a between `0` and `100`\nType `{prefix}help {cmd_name}` if you need help", color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
@@ -750,7 +750,7 @@ async def best(ctx, *args):
     #If not spcified, set to 1
     else:
         score_num = 1
-    
+
 
     #! Get scores from api
     scores = requests.get(f"https://{glob.config.domains['api']}/api/get_player_scores"
@@ -763,19 +763,19 @@ async def best(ctx, *args):
     if fetched_score_count == 0:
         if self_execute == True:
             if int(mode) == 2 and glob.config.no_catch == True:
-                no_catch = " (That's good, keep it like this)" 
+                no_catch = " (That's good, keep it like this)"
             else:
                 no_catch = ""
             embed = discord.Embed(
-                title="Error", 
-                description=f"You don't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}{no_catch}", 
+                title="Error",
+                description=f"You don't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}{no_catch}",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
         else:
             embed = discord.Embed(
-                title="Too big", 
-                description=f"{user_osu['name']} doesn't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}", 
+                title="Error",
+                description=f"{user_osu['name']} doesn't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
@@ -784,25 +784,25 @@ async def best(ctx, *args):
     elif fetched_score_count != score_num:
         if self_execute == True:
             embed = discord.Embed(
-                title="Too big", 
-                description=f"You don't have this many scores in {const.mode_names[str(mode)]}{embed_with_mods_text}, displaying your last one (Best nr. {fetched_score_count})", 
+                title="Error",
+                description=f"You don't have this many scores in {const.mode_names[str(mode)]}{embed_with_mods_text}, displaying your last one (Best nr. {fetched_score_count})",
                 color=colors.embeds.purple)
             embed.set_footer(text=glob.embed_footer)
             await ctx.send(embed=embed, delete_after=10)
         else:
             embed = discord.Embed(
-                title="Too big", 
-                description=f"{user_osu['name']} doesn't have this many scores in {const.mode_names[str(mode)]}{embed_with_mods_text}, displaying their last one (Best nr. {fetched_score_count})", 
+                title="Error",
+                description=f"{user_osu['name']} doesn't have this many scores in {const.mode_names[str(mode)]}{embed_with_mods_text}, displaying their last one (Best nr. {fetched_score_count})",
                 color=colors.embeds.purple)
             embed.set_footer(text=glob.embed_footer)
             await ctx.send(embed=embed, delete_after=10)
-        
+
         score_num = fetched_score_count
         score = scores.pop()
     #* Everything went good, assign score
     else:
         score = scores[int(score_num)-1]
-    
+
     #!Build embed
     beatmap = score['beatmap']
     embed_header = ""
@@ -842,7 +842,7 @@ async def best(ctx, *args):
         combo = f"x{score['max_combo']}"
         embed_desc += f" ▸ **Ratio:** 1:{round(int(score['ngeki'])/int(score['n300']), 3)}"
         desc_3rd_line = f"▸ HP: {beatmap['hp']} ▸ OD: {beatmap['od']} ▸ BPM: {beatmap['bpm']}"
-    
+
     #Create embed desc
     embed_desc += f""
 
@@ -855,14 +855,14 @@ async def best(ctx, *args):
         stars = f"{round(beatmap['diff'], 2)}★▲"
     else:
         stars = f"{round(beatmap['diff'], 2)}★"
-    
+
     # Set beatmap creator and set heard to link
     embed_desc_header += f" by {beatmap['creator']}"
     embed_desc_header = f"[{embed_desc_header}](https://osu.ppy.sh/b/{beatmap['id']})"
-    
+
     # Add comas to score
     map_score = "{:,}".format(score['score'])
-    
+
     # Getting time of play submit, and converting it to timeago instead of date
     time1 = datetime.datetime.utcnow()
     time2 = pandas.to_datetime(score["play_time"], format="%Y-%m-%dT%H:%M:%S")
@@ -908,19 +908,19 @@ async def rs(ctx, *args):
     #!Check if module & command disabled
     if glob.config.modules["osu"] == False:
         embed = discord.Embed(
-            title="Error", 
-            description="This module has been disabled by administrator.", 
+            title="Error",
+            description="This module has been disabled by administrator.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
     if glob.config.commands["rs"] == False:
         embed = discord.Embed(
-            title="Error", 
-            description="This command has been disabled by administrator.", 
+            title="Error",
+            description="This command has been disabled by administrator.",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-        
+
     #!Check if user is restricted (role)
     if glob.config.restricted_access['rs'] == False:
         #TODO: Optimize this, as for loop for just roles is stupid idea but works for now
@@ -929,8 +929,8 @@ async def rs(ctx, *args):
                 #! THIS CHECKS FOR ROLE, NOT PERMS
                 # Perm check from osu is in config and lower part of code.
                 # Under restricted_users_view_by_all and restricted_access
-                embed = discord.Embed(title="Error", 
-                description=f"You can't use `{prefix}{cmd_name}` because you're restricted!", 
+                embed = discord.Embed(title="Error",
+                description=f"You can't use `{prefix}{cmd_name}` because you're restricted!",
                 color=colors.embeds.red
                 )
                 embed.set_footer(text=glob.embed_footer)
@@ -943,13 +943,13 @@ async def rs(ctx, *args):
     if len(args_as_list) == 0:
         pass
     elif args_as_list[0] not in allowed_args:
-        embed = discord.Embed(title="Error", 
-        description=f"First argument is incorrect, check `{prefix}help {cmd_name}` if you need help", 
+        embed = discord.Embed(title="Error",
+        description=f"First argument is incorrect, check `{prefix}help {cmd_name}` if you need help",
         color=colors.embeds.red
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #! Parse user
     if "-u" in args:
         if len(args["-u"]) > 15:
@@ -964,20 +964,20 @@ async def rs(ctx, *args):
             else:
                 self_execute = False
                 desc1 = f"User not found, maybe they don't have discord connected?\n You can also try with their {glob.config.servername} username\nRemember that names like `-u s e r-` must be put in quotation marks for example "+'`.profile -u "-u s e r-"`\n'
-            
+
             #* Database stuff
             user_discord = await glob.db.fetch(
                 "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s", user
             )
-            
+
             #! User not found, in this case not linked
             if not user_discord:
                 embed = discord.Embed(title="Error",
-                description=f"{desc1}.\nIf you need help with this command type `{prefix}help {cmd_name}`", 
+                description=f"{desc1}.\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
-            
+
             #* Get osu info
             userid = user_discord["osu_id"]
             user_osu = await glob.db.fetch(
@@ -1000,7 +1000,7 @@ async def rs(ctx, *args):
             if not user_osu:
                 embed = discord.Embed(title="Error",
                 description=f"User not found, maybe they don't have discord connected?\n"
-                            f"You can also try with their {glob.config.servername} username\nRemember that " 
+                            f"You can also try with their {glob.config.servername} username\nRemember that "
                              "names like `-u s e r-` must be put in quotation marks for example "
                              '`.profile -u "-u s e r-"`\n'
                             f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
@@ -1019,7 +1019,7 @@ async def rs(ctx, *args):
         #Not specified, get author id and check if linked
         user = ctx.author.id
         self_execute = True
-        
+
         #* Database stuff
         user_discord = await glob.db.fetch(
             "SELECT osu_id, default_mode FROM discord WHERE discord_id = %s", user
@@ -1032,11 +1032,11 @@ async def rs(ctx, *args):
                             f"if you need help.\nYou can always try with your {glob.config.servername} name"
                             f"\nRemember that names like `-u s e r-` must be put in quotation marks "
                             f"for example "+'`.profile -u "-u s e r-"`'
-                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`", 
+                            f"\nIf you need help with this command type `{prefix}help {cmd_name}`",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
-        
+
         #* Get osu info
         userid = user_discord["osu_id"]
         user_osu = await glob.db.fetch(
@@ -1050,7 +1050,7 @@ async def rs(ctx, *args):
     #!Ż bot is uncheckable
     if user_osu['id'] == 1:
         embed = discord.Embed(
-        title="Error", 
+        title="Error",
         description=f"Well, you can't check {glob.config.bancho_bot_name} on discord. For some reason it just won't work",
         color=colors.embeds.red)
         embed.set_footer(text=f"Bot Version: {version}")
@@ -1068,17 +1068,17 @@ async def rs(ctx, *args):
             author_osu = {
                 "priv": 3
             }
-        
+
         user_priv = Privileges(int(user_osu['priv']))
         author_priv = Privileges(int(author_osu['priv']))
-        #! Check if restricted, if yes check if allowed in config, in no check perms, 
+        #! Check if restricted, if yes check if allowed in config, in no check perms,
         #! if yes check admin commands allowed in public, if no check channel
         if Privileges.Normal not in user_priv and not glob.config.restricted_users_view_by_all:
         # user is restricted and only admins can do this, we should check if they are allowed to use it in this channel or not
             if not author_priv & Privileges.Staff:
                 embed = discord.Embed(
-                    title="Error", 
-                    description=f"You don't have permissions to check profiles of restricted users.", 
+                    title="Error",
+                    description=f"You don't have permissions to check profiles of restricted users.",
                     color=colors.embeds.red)
                 embed.set_footer(text=glob.embed_footer)
                 return await ctx.send(embed=embed)
@@ -1146,7 +1146,7 @@ async def rs(ctx, *args):
     response = requests.get(f"https://{glob.config.domains['api']}/api/get_player_status?id={userid}")
     json_object = json.loads(response.text)
     req = json_object["player_status"]
-    
+
     if req['online'] == True:
         user_status = ["🟢", "Online"]
     else:
@@ -1157,26 +1157,26 @@ async def rs(ctx, *args):
                           f"?id={userid}&scope=recent&mods={mode_mods}&mode={mode_gulag}&limit=1")
     json_object = json.loads(scores.text)
     scores = json_object['scores']
-    
+
     fetched_score_count = len(scores)
     #! Error catching with score amount
     #* If no scores return error
     if fetched_score_count == 0:
         if self_execute == True:
             if int(mode) == 2 and glob.config.no_catch == True:
-                no_catch = " (That's good, keep it like this)" 
+                no_catch = " (That's good, keep it like this)"
             else:
                 no_catch = ""
             embed = discord.Embed(
-                title="Error", 
-                description=f"You don't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}{no_catch}", 
+                title="Error",
+                description=f"You don't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}{no_catch}",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
         else:
             embed = discord.Embed(
-                title="Too big", 
-                description=f"{user_osu['name']} doesn't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}", 
+                title="Too big",
+                description=f"{user_osu['name']} doesn't have any scores in {const.mode_names[str(mode)]}{embed_with_mods_text}",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
@@ -1222,7 +1222,7 @@ async def rs(ctx, *args):
         combo = f"x{score['max_combo']}"
         embed_desc += f" ▸ **Ratio:** 1:{round(int(score['ngeki'])/int(score['n300']), 3)}"
         desc_3rd_line = f"▸ HP: {beatmap['hp']} ▸ OD: {beatmap['od']} ▸ BPM: {beatmap['bpm']}"
-    
+
     #Create embed desc
     embed_desc += f""
 
@@ -1235,14 +1235,14 @@ async def rs(ctx, *args):
         stars = f"{round(beatmap['diff'], 2)}★▲"
     else:
         stars = f"{round(beatmap['diff'], 2)}★"
-    
+
     # Set beatmap creator and set heard to link
     embed_desc_header += f" by {beatmap['creator']}"
     embed_desc_header = f"[{embed_desc_header}](https://osu.ppy.sh/b/{beatmap['id']})"
-    
+
     # Add comas to score
     map_score = "{:,}".format(score['score'])
-    
+
     # Getting time of play submit, and converting it to timeago instead of date
     time1 = datetime.datetime.utcnow()
     time2 = pandas.to_datetime(score["play_time"], format="%Y-%m-%dT%H:%M:%S")

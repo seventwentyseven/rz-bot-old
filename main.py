@@ -10,16 +10,17 @@ import datetime
 import json
 import os
 
-
+import config_checker
 from const import colors
 from const import constants as const
 from const import glob
 from utils.time import hourTimestamp
+
 #--> Welcome text
 print(f"""\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
- 
-      ŻŻŻŻŻŻŻ 
-      Ż:::::Ż 
+
+      ŻŻŻŻŻŻŻ
+      Ż:::::Ż
       ŻŻŻŻŻŻŻ
 
 ŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻ     BBBBBBBBBBBBBBBBB        OOOOOOOOO     TTTTTTTTTTTTTTTTTTTTTTT
@@ -27,19 +28,21 @@ print(f"""\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n
 Ż:::::::::::::::::Ż     B::::::BBBBBB:::::B  OO:::::::::::::OO T:::::::::::::::::::::T
 Ż:::ŻŻŻŻŻŻŻŻ:::::Ż      BB:::::B     B:::::BO:::::::OOO:::::::OT:::::TT:::::::TT:::::T
 ŻŻŻŻŻ     Ż:::::Ż         B::::B     B:::::BO::::::O   O::::::OTTTTTT  T:::::T  TTTTTT
-        Ż:::::Ż           B::::B     B:::::BO:::::O     O:::::O        T:::::T        
-       Ż:::::Ż            B::::BBBBBB:::::B O:::::O     O:::::O        T:::::T        
-      Ż:::::Ż             B:::::::::::::BB  O:::::O     O:::::O        T:::::T        
-     Ż:::::Ż              B::::BBBBBB:::::B O:::::O     O:::::O        T:::::T        
-    Ż:::::Ż               B::::B     B:::::BO:::::O     O:::::O        T:::::T        
-   Ż:::::Ż                B::::B     B:::::BO:::::O     O:::::O        T:::::T        
-ŻŻŻ:::::Ż     ŻŻŻŻŻ       B::::B     B:::::BO::::::O   O::::::O        T:::::T        
-Ż::::::ŻŻŻŻŻŻŻŻ:::Ż     BB:::::BBBBBB::::::BO:::::::OOO:::::::O      TT:::::::TT      
-Ż:::::::::::::::::Ż     B:::::::::::::::::B  OO:::::::::::::OO       T:::::::::T      
-Ż:::::::::::::::::Ż     B::::::::::::::::B     OO:::::::::OO         T:::::::::T      
-ŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻ     BBBBBBBBBBBBBBBBB        OOOOOOOOO           TTTTTTTTTTT  
+        Ż:::::Ż           B::::B     B:::::BO:::::O     O:::::O        T:::::T
+       Ż:::::Ż            B::::BBBBBB:::::B O:::::O     O:::::O        T:::::T
+      Ż:::::Ż             B:::::::::::::BB  O:::::O     O:::::O        T:::::T
+     Ż:::::Ż              B::::BBBBBB:::::B O:::::O     O:::::O        T:::::T
+    Ż:::::Ż               B::::B     B:::::BO:::::O     O:::::O        T:::::T
+   Ż:::::Ż                B::::B     B:::::BO:::::O     O:::::O        T:::::T
+ŻŻŻ:::::Ż     ŻŻŻŻŻ       B::::B     B:::::BO::::::O   O::::::O        T:::::T
+Ż::::::ŻŻŻŻŻŻŻŻ:::Ż     BB:::::BBBBBB::::::BO:::::::OOO:::::::O      TT:::::::TT
+Ż:::::::::::::::::Ż     B:::::::::::::::::B  OO:::::::::::::OO       T:::::::::T
+Ż:::::::::::::::::Ż     B::::::::::::::::B     OO:::::::::OO         T:::::::::T
+ŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻŻ     BBBBBBBBBBBBBBBBB        OOOOOOOOO           TTTTTTTTTTT
                             {colors.colors.yellow}Version:{colors.colors.end} {glob.version}""")
 print(f'{colors.colors.cyan}Loading...{colors.colors.end}\n')
+#Check config
+config_checker.checkConfig()
 #-> Set intents
 intents = discord.Intents.all()
 intents.members = True
@@ -60,7 +63,7 @@ for filename in os.listdir('./cogs'):
 
 #Assign global footer
 #TODO: Move it to other place, main.py isn't best place to do it
-#!REMEMBER THAT DELETING OR CHANGING BOT CREATOR IS VIOLATION OF MIT LICENSE
+#!REMEMBER THAT DELETING OR CHANGING BOT CREATOR IS VIOLATION OF LICENSE
 try:
     footers = {
         0: f"Bot Version: {version} | Bot Creator: def750#2137",
@@ -105,13 +108,13 @@ async def checkUpdates():
     if glob.config.updater_enabled == False:
         return
     cmyui.log(f"Checking for updates...", Ansi.GREEN)
-    
+
     # Api
     async with glob.session.get("https://rz-bot.tk/api/get_latest") as r:
         resp = await r.json()
         if resp['status'] != "Success":
             return cmyui.log("Error occured while checking updates", Ansi.RED)
-        
+
         #Assign variables
         resp = resp['version_info']
         fetched_version = cmyui.Version(int(resp['major']), int(resp['minor']), int(resp['micro']))
@@ -134,7 +137,7 @@ async def checkUpdates():
             if resp['security_update'] == "True":
                 print(f"\n{colors.red}This version contains security updates{colors.end}\n")
             print(f"{colors.red}############################{colors.end}\n")
-            
+
             # Send message to owners
             for user_element in glob.config.bot_owners:
                 user = bot.get_user(int(user_element))
@@ -192,9 +195,9 @@ async def load(ctx, cog):
 @bot.command(aliases=["version"])
 async def _version(ctx, input_version:str=None):
     embed = discord.Embed(
-        title="Bot Version", 
-        description=f"**{glob.version}**", 
-        color=colors.embeds.purple, 
+        title="Bot Version",
+        description=f"**{glob.version}**",
+        color=colors.embeds.purple,
     )
     embed.set_footer(text="Created by def750 and grafika dzifors. © Seventwentyseven.tk 2021")
     if input_version==None:
@@ -246,7 +249,7 @@ async def _version(ctx, input_version:str=None):
             "**Website (Not Finished):** https://rz-bot.tk",
             inline=True
         )
-   
+
     return await ctx.send(embed=embed)
 
 #Im a fucking mastermind

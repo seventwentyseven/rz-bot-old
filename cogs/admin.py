@@ -9,7 +9,6 @@ from const import countries
 from utils.utils import parseArgs
 
 import cmyui
-import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -18,7 +17,7 @@ class admin(commands.Cog):
         self.bot = bot
 
 prefix = glob.config.prefix
-    
+
 
 def setup(bot):
     bot.add_cog(admin(bot))
@@ -51,7 +50,7 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
     author = await glob.db.fetch("SELECT osu_id FROM discord WHERE discord_id = %s", ctx.author.id)
     if not author:
         embed = discord.Embed(
-            title="Error", 
+            title="Error",
             description=f"You don't have your {glob.config.servername} account linked, We somehow need to check your perms. Type `{prefix}help link` if you need help",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
@@ -62,15 +61,15 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
         print(author_priv)
         if Privileges.Admin not in author_priv:
             embed = discord.Embed(
-                title="Error", 
+                title="Error",
                 description=f"You don't have permissions to execute this command",
                 color=colors.embeds.red)
             embed.set_footer(text=glob.embed_footer)
-            return await ctx.send(embed=embed) 
+            return await ctx.send(embed=embed)
     #! Syntax check
     if country == None or username == None:
         embed = discord.Embed(
-            title="Error", 
+            title="Error",
             description=f"Invalid syntax, type `{prefix}help {cmd_name}` if you need help",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
@@ -78,27 +77,27 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
 
     if country.lower() not in countries.country_codes:
         embed = discord.Embed(
-            title="Error", 
+            title="Error",
             description=f"Country not found, if you don't know the country code, just google it",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     # Select username
     res = await glob.db.fetch("SELECT id, name, country FROM users WHERE name = %s", username)
     if not res:
         embed = discord.Embed(
-            title="Error", 
+            title="Error",
             description=f"Username not found",
             color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #! Everything went fine
     userid = res['id']
     await glob.db.execute("UPDATE `users` SET country = %s WHERE id = %s", (country.upper(), userid))
     embed = discord.Embed(
-        title="Country Changed", 
+        title="Country Changed",
         description=f"Successfully changed {res['name']} (ID {res['id']}) country from `{res['country'].upper()}` to `{country.upper()}`",
         color=colors.embeds.green)
     embed.set_footer(text=glob.embed_footer)
@@ -157,7 +156,7 @@ async def sendtemplate(ctx, *args):
             )
             embed.set_footer(text=glob.embed_footer)
             return await ctx.send(embed=embed)
-    
+
     #Check for first arg
     if len(args_as_list) == 1 and args_as_list[0] not in allowed_args:
         embed = discord.Embed(
@@ -167,21 +166,21 @@ async def sendtemplate(ctx, *args):
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #Parse args
     args = parseArgs(args, allowed_args)
 
     #Check if executioner wants to see template list
     if "-list" in args:
         embed = discord.Embed(
-            title="Template list", 
-            description=f"List of all aviable templates: ",
+            title="Template list",
+            description=f"List of all avaible templates: ",
             color=ctx.author.color)
         for i in glob.config.mailtemplates.keys():
             embed.description += f"`{i}` "
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     if "-template" in args:
         #Check if template exists
         if args["-template"].lower() not in glob.config.mailtemplates:
@@ -209,7 +208,7 @@ async def sendtemplate(ctx, *args):
             user = args["-u"][1:-1]
         else:
             user = args['-u']
-        
+
         #Fetch from db
         user = await glob.db.fetch("SELECT id, name, email FROM users WHERE name=%s", user)
         if not user:
@@ -236,7 +235,7 @@ async def sendtemplate(ctx, *args):
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     #Send email and embed (if discord connected)
     #Try to send embed
     if user_discord != False:
@@ -258,7 +257,7 @@ async def sendtemplate(ctx, *args):
             )
             embed.set_footer(text=glob.embed_footer)
             await ctx.send(embed=embed)
-    
+
     #Try to send email
     message = Mail(
     from_email=template['email_used'],
@@ -273,8 +272,8 @@ async def sendtemplate(ctx, *args):
     except Exception as e:
         print(e.message)
         embed = discord.Embed(
-            title="Error", 
-            description=f"Error occured while sending an email.\n**Error message:** `{e.message}`", 
+            title="Error",
+            description=f"Error occured while sending an email.\n**Error message:** `{e.message}`",
             color=colors.embeds.red,
         )
         if response.status_code:
@@ -289,7 +288,7 @@ async def sendtemplate(ctx, *args):
         embed = discord.Embed(
             title="Email sent successfully",
             description=f"**Email used:** {template['email_used']}\n"
-                        f"**Reciever:** {user['name']}{tag}\n"
+                        f"**Receiver:** {user['name']}{tag}\n"
                         f"**Template used**: {args['-template'].lower()}\n"
                         f"**Email title:** {template['title']}\n"
                         f"**Email content:** ```{template['email_content']}```".replace('<br>', '\n')

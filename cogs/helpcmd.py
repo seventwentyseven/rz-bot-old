@@ -12,7 +12,7 @@ class helpcmd(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    
+
 #Re define for easier usage
 prefix = glob.config.prefix
 version = constant_version
@@ -53,7 +53,7 @@ async def help(ctx, cmd_name:str = "None"):
             embed.description += "**Admin:** `rlc`, `load`, `changecountry`, `sendtemplate`"
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
-    
+
     # If args were specified, check if they exist
     try:
         cmd = helpresponses.helpresponses[cmd_name.lower()]
