@@ -9,6 +9,7 @@ from const import countries
 from utils.utils import parseArgs
 
 import cmyui
+import datetime
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
@@ -23,6 +24,7 @@ def setup(bot):
     bot.add_cog(admin(bot))
     bot.add_command(changecountry)
     bot.add_command(sendtemplate)
+    bot.add_command(givedonator)
 
 @commands.command()
 async def changecountry(ctx, country:str=None, *, username:str=None):
@@ -296,3 +298,148 @@ async def sendtemplate(ctx, *args):
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
+#################################################################################################
+@commands.command()
+async def givedonator(ctx, user:str=None, time:str=None, _type:str=None):
+    cmd_name = "givedonator"
+    #Check if module and command are enabled
+    if glob.config.modules['admin'] == False:
+        embed = discord.Embed(
+            title="Error",
+            description=f"Admin module has been disabled by administrator",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    if glob.config.commands['givedonator'] == False:
+        embed = discord.Embed(
+            title="Error",
+            description=f"{cmd_name.capitalize()} command has been disabled by administrator",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+
+    #Get author perms
+    author = await glob.db.fetch("SELECT osu_id FROM discord WHERE discord_id=%s", ctx.author.id)
+    if not author:
+        embed = discord.Embed(
+            title="Error",
+            description=f"You don't have your {glob.config.servername} account linked, We somehow need to check your perms. Type `{prefix}help link` if you need help",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    else:
+        author_priv = await glob.db.fetch("SELECT priv FROM users WHERE id=%s", author['osu_id'])
+        author_priv = Privileges(int(author_priv['priv']))
+        if Privileges.Dangerous not in author_priv:
+            embed = discord.Embed(
+                title="Error",
+                description=f"You don't have permissions to execute this command",
+                color=colors.embeds.red
+            )
+            embed.set_footer(text=glob.embed_footer)
+            return await ctx.send(embed=embed)
+
+    #Check user
+    if user == None:
+        embed = discord.Embed(
+            title="Error",
+            description=f"You must specify user, type `{prefix}help {cmd_name}` to get help for this command",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    else:
+        if user.startswith('"') and user.endswith('"'):
+            user = user[1:-1]
+
+        #Fetch user
+        user = await glob.db.fetch("SELECT id, name, priv, donor_end FROM users WHERE name=%s", user)
+        if not user:
+            embed = discord.Embed(
+                title="Error",
+                description=f"User not found, if it has spaces, put in in quotes like that" + '`"def 750"`',
+                color=colors.embeds.red
+            )
+            embed.set_footer(text=glob.embed_footer)
+            return await ctx.send(embed=embed)
+
+    # Get donator length
+    if time == None:
+        await ctx.send("Time not specified, setting to 30 days", delete_after=10)
+        time = 30
+    #Syntax checks
+    elif not time.isdigit():
+        embed = discord.Embed(
+            title="Error",
+            description=f"Time (in days) argument must be a digit.\nType `{prefix}help {cmd_name}` to get help for this command.",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    #Convert to int
+    else:
+        time = int(time)
+
+    #Make timedelta, what next? maybe timeepsilon and timegamma (mania refernece, why did i put this in code)
+    timedelta = datetime.timedelta(days=time)
+    #Now
+    now = datetime.datetime.utcnow()
+
+    #Check if had donator or has one
+    if datetime.datetime.fromtimestamp(user['donor_end']) < now:
+        end = now + timedelta
+    else:
+        donor_end = datetime.datetime.fromtimestamp(user['donor_end'])
+        end = donor_end + timedelta
+    end = datetime.datetime.timestamp(end)
+    changed = False
+    #Calculate privileges
+    user_priv = Privileges(int(user['priv']))
+    if _type == None:
+        if Privileges.Supporter not in user_priv:
+            user_priv += Privileges.Supporter
+            changed = True
+        type_name = "supporter"
+    elif _type.lower() in ["supporterp", "supporterplus", "donatorp", "premium", "supporter+"]:
+        if Privileges.Supporter not in user_priv:
+            user_priv += Privileges.Supporter
+            changed = True
+        if Privileges.Premium not in user_priv:
+            user_priv += Privileges.Premium
+            changed = True
+        type_name = "premium"
+    else:
+        await ctx.send(f"Donor type not found, setting to normal one\nType `{prefix}help {cmd_name}` if you need help", delete_after=10)
+        if Privileges.Supporter not in user_priv:
+            user_priv += Privileges.Supporter
+            changed = True
+        type_name = "supporter"
+    if changed == False:
+        user_priv = user['priv']
+
+    #Update perms
+    await glob.db.execute("UPDATE users SET donor_end=%s, priv=%s WHERE id=%s", [end, user_priv, user['id']])
+
+    embed = discord.Embed(
+        title="Give donator",
+        description=f"Successfully added **{time}** days of {type_name} to {user['name']}",
+        color=colors.embeds.green
+    )
+    embed.set_footer(text=glob.embed_footer)
+    cmyui.log(f"{ctx.author.name}#{ctx.author.discriminator} added {time} days of {type_name} to {user['name']}", cmyui.Ansi.GREEN)
+    await ctx.send(embed=embed)
+    try:
+        channel = glob.bot.get_channel(int(glob.config.channels['botlogs']))
+        embed = discord.Embed(
+            title=f"{ctx.author.name}#{ctx.author.discriminator} used .givedonator",
+            description=f"{ctx.author.name}#{ctx.author.discriminator} added {time} days of {type_name} to {user['name']}",
+            color=colors.embeds.green,
+            timestamp=now
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await channel.send(embed=embed)
+    except:
+        return

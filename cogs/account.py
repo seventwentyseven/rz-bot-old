@@ -5,6 +5,7 @@ from cmyui import log, Ansi, utils
 import datetime
 
 from const.colors import colors
+from const.privileges import Privileges
 from const import constants as const
 from const import glob
 
@@ -22,6 +23,7 @@ def setup(bot):
     bot.add_command(link)
     bot.add_command(getuserid)
     bot.add_command(defaultmode)
+    bot.add_command(donatorend)
 
 
 #Re define for easier usage
@@ -144,3 +146,68 @@ async def defaultmode(ctx, mode=None):
     )
     embed.set_footer(text=glob.embed_footer)
     return await ctx.send(embed=embed)
+
+@commands.command()
+async def donatorend(ctx, user:str=None):
+    if user == None:
+        #Get user discord
+        user = await glob.db.fetch("SELECT osu_id FROM discord WHERE discord_id=%s", ctx.author.id)
+        if not user:
+            embed = discord.Embed(
+            title="Error",
+            description=f"You don't have your {glob.config.servername} account linked, you can always try with your username",
+            color=colors.embeds.green
+            )
+            embed.set_footer(text=glob.embed_footer)
+            return await ctx.send(embed=embed)
+        user = await glob.db.fetch("SELECT name, priv, donor_end FROM users WHERE id=%s", user['osu_id'])
+        pron1 = "You"
+        pron2 = "doesn't"
+        pron4 = "Your"
+    else:
+        user = await glob.db.fetch("SELECT name, priv, donor_end FROM users WHERE name=%s", user)
+        if not user:
+            embed = discord.Embed(
+            title="Error",
+            description=f"User not found, if it has spaces, put in in quotes like that" + '`"def 750"`',
+            color=colors.embeds.green
+            )
+            embed.set_footer(text=glob.embed_footer)
+            return await ctx.send(embed=embed)
+        pron1 = f"{user['name']}"
+        pron2 = f"doesn't"
+        pron4 = f"{pron1}'s"
+    user_priv = Privileges(int(user['priv']))
+    print(user_priv)
+    if int(user['donor_end']) == 0:
+        embed = discord.Embed(
+            title="Nope",
+            description=f"{pron1} currently {pron2} have supporter nor premium",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    now = datetime.datetime.utcnow()
+    donor_end = datetime.datetime.fromtimestamp(int(user['donor_end']))
+    if Privileges.Premium in user_priv:
+        type_name = "Premium"
+    else:
+        type_name = "Supporter"
+    if now > donor_end:
+        embed = discord.Embed(
+            title="Well, not too good",
+            description=f"{pron4} {type_name} has expired on {donor_end}",
+            color=colors.embeds.red
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+    else:
+        days_left = donor_end - now
+        days_left = days_left.days
+        embed = discord.Embed(
+            title="Yay!",
+            description=f"{pron1} still have **{days_left}** days of {type_name}\n**Expires on:** {donor_end}",
+            color=colors.embeds.green
+        )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)

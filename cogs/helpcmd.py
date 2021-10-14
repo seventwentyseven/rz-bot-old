@@ -45,12 +45,12 @@ async def help(ctx, cmd_name:str = "None"):
             title="Help - List of commands",
             description=f"Current prefix: `{prefix}`  List of commands:\n\n"
                         "**Osu:** `profile`, `rs`, `best`, `getuserid`, `defaultmode`\n"
-                        "**Verification:** `link`\n",
+                        "**Account:** `link`, `donatorend`\n",
             color=colors.embeds.blue,
         )
         #Help admin section
         if Privileges.Mod in priv or Privileges.Dangerous in priv or Privileges.Admin in priv:
-            embed.description += "**Admin:** `rlc`, `load`, `changecountry`, `sendtemplate`"
+            embed.description += "**Admin:** `rlc`, `load`, `changecountry`, `sendtemplate`, `givedonator`"
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
 

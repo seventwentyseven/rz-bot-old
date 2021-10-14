@@ -77,4 +77,18 @@ helpresponses = {
         "example": f"`{p}sendtemplate -u def750 -template cheating`",
         "info": f"Arguments: \n`-template <template name>` - Specify template, type `{p}sendtemplate -list` to see list of all aviable templates\n`-u username` - your server"
     },
+    "givedonator": {
+        "privileges": Privileges.Dangerous,
+        "header": "Give Donator",
+        "description": "Give donator to user",
+        "example": f"`{p}givedonator def750 30 premium`",
+        "info": f"Arguments: \n`<username>` (Required) - {glob.config.servername} username\n`<time>` - Time to add in days (Default: 30)\n`<type>` - Donator type, leave empty if normal supporter, type `premium` if you want to give premium"
+    },
+    "donatorend": {
+        "privileges": Privileges.Normal,
+        "header": "Donator end",
+        "description": "Check donator days left",
+        "example": f"`{p}donatorend def750`",
+        "info": f"Arguments: \n`<username>` (Optional) - {glob.config.servername} username"
+    },
 }

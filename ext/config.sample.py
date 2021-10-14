@@ -153,7 +153,8 @@ commands = {
 
     # Administration
     "checknotes": True,
-    "changecountry": True
+    "changecountry": True,
+    "givedonator": True
 
 }
 

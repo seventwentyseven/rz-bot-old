@@ -201,7 +201,7 @@ def checkConfig():
         print(f"{r}ERROR: {i} Commands dict does not exist, {chccfg}{e}")
         exit()
     true_keys = ["best", "rs", "profile", "leaderboard", "sendmail",
-                 "sendtemplate", "checknotes", "changecountry"]
+                 "sendtemplate", "checknotes", "changecountry", "givedonator"]
     for key, value in config.commands.items() :
         if key not in true_keys:
             print(f"{r}ERROR: {key} Value in commands dict does not exist, {chccfg}{e}")
