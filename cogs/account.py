@@ -178,7 +178,6 @@ async def donatorend(ctx, user:str=None):
         pron2 = f"doesn't"
         pron4 = f"{pron1}'s"
     user_priv = Privileges(int(user['priv']))
-    print(user_priv)
     if int(user['donor_end']) == 0:
         embed = discord.Embed(
             title="Nope",
