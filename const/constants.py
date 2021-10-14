@@ -2,7 +2,7 @@ import cmyui
 import aiohttp
 session = aiohttp.ClientSession()
 #Don't touch version or else updater will get autism. I'm the one changing it, not you.
-version = cmyui.Version(1, 0, 0)
+version = cmyui.Version(1, 0, 1)
 
 #Don't touch this too, it's mysql connection stuff
 db = cmyui.AsyncSQLPool()
