@@ -12,3 +12,4 @@ __pychache__
 .vscode/settings.json
 test.py
 config.py
+.pytest_chache
