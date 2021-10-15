@@ -26,6 +26,7 @@ def setup(bot):
     bot.add_command(sendtemplate)
     bot.add_command(givedonator)
 
+@commands.guild_only()
 @commands.command()
 async def changecountry(ctx, country:str=None, *, username:str=None):
     cmd_name = "changecountry"
@@ -104,7 +105,17 @@ async def changecountry(ctx, country:str=None, *, username:str=None):
         color=colors.embeds.green)
     embed.set_footer(text=glob.embed_footer)
     return await ctx.send(embed=embed)
+@changecountry.error
+async def nodms_error(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 
+@commands.guild_only()
 @commands.command()
 async def sendtemplate(ctx, *args):
     cmd_name = "sendmail"
@@ -298,7 +309,17 @@ async def sendtemplate(ctx, *args):
         )
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
+@sendtemplate.error
+async def nodms_error(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 #################################################################################################
+@commands.guild_only()
 @commands.command()
 async def givedonator(ctx, user:str=None, time:str=None, _type:str=None):
     cmd_name = "givedonator"
@@ -443,3 +464,12 @@ async def givedonator(ctx, user:str=None, time:str=None, _type:str=None):
         return await channel.send(embed=embed)
     except:
         return
+@givedonator.error
+async def nodms_error(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)

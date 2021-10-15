@@ -37,6 +37,7 @@ def setup(bot):
     bot.add_command(best)
     bot.add_command(rs)
 
+@commands.guild_only()
 @commands.command()
 async def profile(ctx, *args):
     """Check user profile and their stats"""
@@ -414,6 +415,15 @@ async def profile(ctx, *args):
         text=embed_footer_1
     )
     return await ctx.send(embed=embed)
+@profile.error
+async def nodms_profile(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 
 
 
@@ -421,9 +431,7 @@ async def profile(ctx, *args):
 
 
 
-
-
-
+@commands.guild_only()
 @commands.command()
 async def best(ctx, *args):
     cmd_name = "best"
@@ -893,11 +901,19 @@ async def best(ctx, *args):
     embed.set_footer(text=emb_footer)
     await ctx.send(embed=embed)
 
+@best.error
+async def nodms_best(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 
 
 
-
-
+@commands.guild_only()
 @commands.command(aliases=["recent"])
 async def rs(ctx, *args):
     """Check user most recent score"""
@@ -1272,4 +1288,12 @@ async def rs(ctx, *args):
     embed.set_thumbnail(url=f"https://{glob.config.domains['avatar']}/{user_osu['id']}")
     embed.set_footer(text=emb_footer)
     await ctx.send(embed=embed)
-
+@rs.error
+async def nodms_rs(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)

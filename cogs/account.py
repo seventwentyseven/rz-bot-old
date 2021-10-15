@@ -32,6 +32,7 @@ version = const.version
 roles = glob.config.roles
 emotes = glob.config.emotes
 
+@commands.guild_only()
 @commands.command()
 async def link(ctx, code=None):
     """Link the user with the osu account"""
@@ -98,8 +99,17 @@ async def link(ctx, code=None):
     embed.timestamp = datetime.datetime.utcnow()
     embed.set_footer(text=glob.embed_footer)
     return await verlogs.send(embed=embed)
+@link.error
+async def nodms_link(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 
-
+@commands.guild_only()
 @commands.command()
 async def getuserid(ctx, user=None):
     if user == None:
@@ -108,7 +118,17 @@ async def getuserid(ctx, user=None):
     if not usr:
         return await ctx.send("User not found")
     await ctx.send(f"{user}'s id is {usr['id']}")
+@getuserid.error
+async def nodms_error(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 
+@commands.guild_only()
 @commands.command()
 async def defaultmode(ctx, mode=None):
     cmd_name = "defaultmode"
@@ -146,7 +166,17 @@ async def defaultmode(ctx, mode=None):
     )
     embed.set_footer(text=glob.embed_footer)
     return await ctx.send(embed=embed)
+@defaultmode.error
+async def nodms_error(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
 
+@commands.guild_only()
 @commands.command()
 async def donatorend(ctx, user:str=None):
     if user == None:
@@ -208,5 +238,14 @@ async def donatorend(ctx, user:str=None):
             description=f"{pron1} still have **{days_left}** days of {type_name}\n**Expires on:** {donor_end}",
             color=colors.embeds.green
         )
+        embed.set_footer(text=glob.embed_footer)
+        return await ctx.send(embed=embed)
+@donatorend.error
+async def nodms_error(ctx, error):
+    if isinstance(error, commands.NoPrivateMessage):
+        embed = discord.Embed(
+            title="Error",
+            description="This command cannot be used in DMs.",
+            color=colors.embeds.red)
         embed.set_footer(text=glob.embed_footer)
         return await ctx.send(embed=embed)
