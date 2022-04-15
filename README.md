@@ -1,3 +1,7 @@
+# Compatibility Warning
+This code was tested only with gulag 3.5.4, 3.5.6 is untested and it won't work with 4.0+
+I do not provide any help with converting the code into 4.0 nor making it compatible with newer versions
+
 # What is rz bot
 RZ bot or with original name thats unwrittable in repo name "Ż bot", is a bot for managing osu servers on gulag. Right now there's not too much in the code because im rewriting it for 727th time. I want it to be usable on every osu server made on gulag.
 
