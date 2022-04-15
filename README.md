@@ -1,5 +1,5 @@
 # Compatibility Warning
-This code was tested only with gulag 3.5.4, 3.5.6 is untested and it won't work with 4.0+
+This code was tested only with gulag 3.5.4, 3.6.x is untested and it won't work with 4.0+
 I do not provide any help with converting the code into 4.0 nor making it compatible with newer versions
 
 # What is rz bot
